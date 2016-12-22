@@ -9,10 +9,10 @@
         {{#each events}}
         
             <tr>
-                {{#if isToday}}
+                {{#if isAllDay}}
                     <td align='right'>All Day</td>
                 {{else}}
-                    <td align='right'>{{date}}</td>
+                    <td align='right'>{{formattedDate}}</td>
                 {{/if}}
                 
                 <td> {{summary}} </td>

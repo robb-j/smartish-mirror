@@ -172,8 +172,8 @@
 			success: function(result) {
 				
 				// For some reason the api's single-quote character isn't escaped properly?
-				var removed = result.replace("\\'", "'");
-				setQuote(JSON.parse(removed));
+				var processed = result.replace(/\\'/g, '\'');
+				setQuote(JSON.parse(processed));
 			}
 		});
 	}
@@ -223,15 +223,8 @@
 		
 		// Sort the events, newest first
 		events = events.sort(function(a, b) {
-			return (a.START < b.START) ? -1 : 1;
+			return (a.start < b.start) ? -1 : 1;
 		});
-		
-		
-		// For each event, add if its today and a formated date
-		for (var i in events) {
-			events[i].isToday = (events[i].START === today && events[i].END === tomorrow);
-			events[i].date = moment(events[i].START).format("h:mm a");
-		}
 		
 		
 		// Render the events to the calendar widget
@@ -296,7 +289,15 @@
 	/** Takes parsed events and lowercases & removes 'dt' from keys, could do something fancy with the dates or extra processing on the events */
 	function processEvents(events) {
 		
+		// Some handy dates
+		var today = moment().format("YYYYMMDD");
+		var now = moment();
+		var tomorrow = moment().add(1, 'days').format("YYYYMMDD");
+		
+		
+		// An array to put the processed events
 		var output = [];
+		
 		
 		// Loops through each event
 		for (var i in events) {
@@ -336,8 +337,24 @@
 				
 			}
 			
+			
+			
+			
+			/*
+			 *	Add some extra properties to the events
+			 */
+			
+			// Whether the event an all day event or not
+			newEvent.isAllDay = (newEvent.start === today && newEvent.end === tomorrow);
+			
+			// A formatted version of the date
+			newEvent.formattedDate = moment(newEvent.start).format("h:mm a");
+			
+			
+				
 			// Add the event to our list
 			output.push(newEvent);
+			
 		}
 		
 		// Return the processed events
@@ -395,7 +412,8 @@
 		
 		
 		// Add the sunrise/sunset depending on which is closest
-		if (Date() < sunrise) {
+		var now = new Date();
+		if (now < sunrise || now > sunset) {
 			params.sunrise = moment(sunrise).format("h:mm a");
 		}
 		else {
