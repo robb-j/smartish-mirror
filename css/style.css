@@ -118,15 +118,15 @@ table tr td:nth-child(1) {
 }
 
 
-.message-widget .message-quote:before, .message-widget .message-quote:after {
+.quote-widget .message:before, .quote-widget .message:after {
 	content: '"';
 }
 
-.message-widget .message-author {
+.quote-widget .author {
 	font-style: italic;
 }
 
-.message-widget .message-author:before {
+.quote-widget .author:before {
 	content: '- ';
 }
 

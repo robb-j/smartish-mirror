@@ -1,0 +1,20 @@
+
+<h2 class="widget-title"> {{curTemp}}&deg; {{forecast}} </h2>
+<div class="widget-content">
+    
+    <p class="widget-heading">{{location}}</p>
+    
+    <p>H: {{maxTemp}}&deg; L: {{minTemp}}&deg;</p>
+    
+    <p>{{description}}</p>
+    
+    {{#if sunrise}}
+        <p>Sunrise at {{sunrise}}</p>
+    {{/if}}
+    
+    {{#if sunset}}
+        <p>Sunset at {{sunset}}</p>
+    {{/if}}
+    
+    
+</div>

@@ -1,0 +1,24 @@
+<h2 class="widget-title"> Calendar </h2>
+<div class="widget-content">
+    <table>
+        
+        {{#if noEvents }}
+            <tr><td>No Events</td></tr>
+        {{/if}}
+        
+        {{#each events}}
+        
+            <tr>
+                {{#if isToday}}
+                    <td align='right'>All Day</td>
+                {{else}}
+                    <td align='right'>{{date}}</td>
+                {{/if}}
+                
+                <td> {{summary}} </td>
+            </tr>
+            
+        {{/each}}
+        
+    </table>
+</div>
