@@ -382,11 +382,14 @@
 				// Process the response & display it
 				processWeather(data, true);
 				
-				// Load the procise weather (using geo-location)
-				preciseWeather();
+				// Load the precise weather (using geo-location)
+				if (CONFIG.weather.usePrecise) {
+					preciseWeather();
+				}
 			}
 		});
 	}
+
 	
 	/** Takes a weather API's response and renders in into .weather-widget */
 	function processWeather(result) {
