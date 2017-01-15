@@ -148,22 +148,25 @@ html body {
         }
         
         
-        .quote-widget {
+        /* Clock Widget */
+        .clock-widget {
+            .seperator.on { color: $altTextColour; }
+        }
+        
+        
+        /* Quotes Widget  */
+        .quote-widget h2 {
+            font-family: $bodyFont;
+            font-weight: 300;
             
-            h2 {
-                font-family: $bodyFont;
-                font-weight: 300;
+            .message { @extend .quote; }
+            
+            .author {
+                font-style: italic;
+                font-size: 38px;
                 
-                .message { @extend .quote; }
-                
-                .author {
-                    font-style: italic;
-                    font-size: 38px;
-                    
-                    &:before { content: '- '; }
-                }
+                &:before { content: '- '; }
             }
-            
         }
         
         

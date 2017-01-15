@@ -5,5 +5,9 @@ var CONFIG = {
 	weather: {
         apikey: "api key for https://openweathermap.org/",
 		location: "your default location id for https://openweathermap.org/ (used if no geolocation)",
-	}
+		usePrecise: true,
+	},
+	clock: {
+		secondsIndicator: true,
+	},
 };

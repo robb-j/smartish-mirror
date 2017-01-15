@@ -13,6 +13,7 @@
 	 *	Internal Properties
 	 */
 	var lastClockUpdate = "";
+	var clockSeperator = false;
 	
 	
 	
@@ -34,6 +35,13 @@
 		*/
 		updateClock();
 		setInterval(updateClock, 0.5 * second);
+		
+		
+		if (CONFIG.clock.secondsIndicator) {
+			setInterval(function() {
+				$(".clock-widget .seperator").toggleClass("on", (clockSeperator = !clockSeperator));
+			}, second);
+		}
 		
 		
 		/*
@@ -136,7 +144,8 @@
 		
 		// The params to render the clock
 		var params = {
-			time: moment().format("h:mm a"),
+			hours: moment().format("h"),
+			minutes: moment().format("mm a"),
 			day: moment().format("dddd,"),
 			date: moment().format("Do MMMM YYYY")
 		};
