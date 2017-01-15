@@ -3,7 +3,7 @@
 <head>
 	<!-- Stylesheets -->
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
-	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/screen.css" />
 	
 	
 	<!-- Scripts -->
@@ -15,84 +15,81 @@
 </head>
 
 <body class="fill-parent">
-	<div class="container-fluid fill-parent">
-		<div class="mirror-app fill-parent">
+	<div class="mirror-app fill-parent">
+		
+		
+		<div class="row">
 			
-			
-			<div class="row">
+			<!--
+				The widgets column
+			-->
+			<div class="col-xs-4">
 				
-				<!--
-					The widgets column
-				-->
-				<div class="col-xs-4">
-					
-					<!-- Weather Widget -->
-					<div class="widget weather-widget">
-						<h2 class="widget-title"> Weather </h2>
-						<div class="widget-content">
-							<p>...</p>
-						</div>
+				<!-- Weather Widget -->
+				<div class="widget weather-widget">
+					<h2 class="widget-title"> Weather </h2>
+					<div class="widget-content">
+						<p>...</p>
 					</div>
-					
-					<!-- Calendar Widget -->
-					<div class="widget calendar-widget">
-						<h2 class="widget-title"> Calendar </h2>
-						<div class="widget-content">
-							<table>
-								<td>...</td>
-							</table>
-						</div>
-					</div>
-					
-					<!-- News Widget -->
-					<div class="widget news-widget">
-						<h2 class="widget-title"> News </h2>
-						<div class="widget-content">
-							<ul>
-								<li class="small-text"> ... </li>
-							</ul>
-						</div>
-					</div>
-					
 				</div>
 				
-				
-				
-				
-				<!--
-					The right column
-				-->
-				<div class="col-xs-4 col-xs-push-4">
-					
-					<!-- The time widget -->
-					<div class="widget clock-widget">
-						<h1 class="widget-title"></h1>
-						<div class="widget-content">
-							<h3>
-								<span class="clock-day"></span>
-								<br/>
-								<span class="clock-date"></span>
-							</h3>
-						</div>
-						
+				<!-- Calendar Widget -->
+				<div class="widget calendar-widget">
+					<h2 class="widget-title"> Calendar </h2>
+					<div class="widget-content">
+						<table>
+							<td>...</td>
+						</table>
 					</div>
-					
+				</div>
+				
+				<!-- News Widget -->
+				<div class="widget news-widget">
+					<h2 class="widget-title"> News </h2>
+					<div class="widget-content">
+						<ul>
+							<li class="small-text"> ... </li>
+						</ul>
+					</div>
 				</div>
 				
 			</div>
 			
 			
 			
-			<!-- The Quotes widget -->
 			
-			<div class="bottom-widget quote-widget">
-				<h2>
-				    <span class="message">The best way to predict the future is to make it</span>
-				    <br/>
-				    <span class="author light-text">Abraham Lincoln</span>
-				</h2>
+			<!--
+				The right column
+			-->
+			<div class="col-xs-4 col-xs-push-4">
+				
+				<!-- The time widget -->
+				<div class="widget clock-widget">
+					<h1 class="widget-title"></h1>
+					<div class="widget-content">
+						<h3>
+							<span class="clock-day"></span>
+							<br/>
+							<span class="clock-date"></span>
+						</h3>
+					</div>
+					
+				</div>
+				
 			</div>
 			
+		</div>
+		
+		
+		
+		<!-- The Quotes widget -->
+		
+		<div class="bottom-widget quote-widget">
+			<h2>
+			    <span class="message">The best way to predict the future is to make it</span>
+			    <br/>
+			    <span class="author light-text">Abraham Lincoln</span>
+			</h2>
 		</div>
 		
 	</div>
