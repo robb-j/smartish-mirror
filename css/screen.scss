@@ -41,7 +41,7 @@ $primeColour: white;
 .temperature:after { content: '\00b0'; }
 
 // Add quote marks to a quotation
-.quote:before, .quote:after { content: '"'; }
+.quotation:before, .quotation:after { content: '"'; }
 
 // Lighter text
 .light-text { color: $altTextColour; }
@@ -135,38 +135,42 @@ html body {
                     }
                 }
             }
-        }
-        
-        
-        .bottom-widget {
-            text-align: center;
-            bottom: 100px;
-            left: 0px;
-            padding: 0px 100px;
-            position: absolute;
-            width: 100%;
-        }
-        
-        
-        /* Clock Widget */
-        .clock-widget {
-            .seperator.on { color: $altTextColour; }
-        }
-        
-        
-        /* Quotes Widget  */
-        .quote-widget h2 {
-            font-family: $bodyFont;
-            font-weight: 300;
             
-            .message { @extend .quote; }
             
-            .author {
-                font-style: italic;
-                font-size: 38px;
-                
-                &:before { content: '- '; }
+            
+            
+            &.bottom {
+                border-left: none;
+                text-align: center;
+                bottom: 100px;
+                left: 0px;
+                padding: 0px 100px;
+                position: absolute;
+                width: 100%;
             }
+            
+            
+            /* Clock Widget */
+            &.clock {
+                .seperator.on { color: $altTextColour; }
+            }
+            
+            
+            /* Quotes Widget  */
+            &.quote h2 {
+                font-family: $bodyFont;
+                font-weight: 300;
+                
+                .message { @extend .quotation; }
+                
+                .author {
+                    font-style: italic;
+                    font-size: 38px;
+                    
+                    &:before { content: '- '; }
+                }
+            }
+            
         }
         
         

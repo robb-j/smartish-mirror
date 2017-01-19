@@ -1,0 +1,26 @@
+<div class="row">
+    
+    <div class="col-xs-4">
+        {{#each left}}
+            <div class="left widget {{this}}">
+                <h3 class="widget-title light-text"> Loading {{this}} ... </h3>
+            </div>
+        {{/each}}
+    </div>
+    
+    <div class="col-xs-4 col-xs-push-4">
+        {{#each right}}
+            <div class="right widget {{this}}">
+                <h3 class="widget-title light-text"> Loading {{this}} ... </h3>
+            </div>
+        {{/each}}
+    </div>
+    
+</div>
+
+
+{{#if bottom}}
+    <div class="widget bottom {{bottom}}">
+		<h3 class="widget-title light-text"> Loading {{bottom}} ... </h3>
+    </div>
+{{/if}}

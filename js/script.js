@@ -15,6 +15,7 @@
 	var lastClockUpdate = "";
 	var clockSeperator = false;
 	
+	var CONFIG = {};
 	
 	
 	
@@ -24,52 +25,104 @@
 	 */
 	$(document).ready(function() {
 		
-		// Variables to make scheduling a bit more verbose
-		var second = 1000;
-		var minute = second * 60;
-		var hour = minute * 60;
+		
+		// The data to render our app with
+		var widgets = {
+			left: [],
+			right: [],
+			bottom: null
+		};
 		
 		
-		/*
-			The Clock Widget
-		*/
-		updateClock();
-		setInterval(updateClock, 0.5 * second);
-		
-		
-		if (CONFIG.clock.secondsIndicator) {
-			setInterval(function() {
-				$(".clock-widget .seperator").toggleClass("on", (clockSeperator = !clockSeperator));
-			}, second);
+		// A util to get the name of a widget & store its config in our global
+		function parseWidget(conf) {
+			CONFIG[conf.name] = conf;
+			return conf.name;
 		}
 		
 		
-		/*
-			The Quote widget
-		*/
-		updateQuote();
-		setInterval(updateQuote, hour);
+		// Parse the left side widgets
+		for (var l in MIRROR_CONF.left) {
+			widgets.left.push(parseWidget(MIRROR_CONF.left[l]));
+		}
+		
+		// Parse the right side widgets
+		for (var r in MIRROR_CONF.right) {
+			widgets.right.push(parseWidget(MIRROR_CONF.right[r]));
+		}
+		
+		// Parse the bottom widget (if there is one)
+		if (MIRROR_CONF.bottom) {
+			widgets.bottom = parseWidget(MIRROR_CONF.bottom);
+		}
 		
 		
-		/*
-			The Calendar widget
-		*/
-		updateCalendar();
-		setInterval(updateCalendar, 5 * minute);
-		
-		
-		/*
-			The Weather widget
-		*/
-		updateWeather();
-		setInterval(updateWeather, 10 * minute);
-		
-		
-		/*
-			The News Widget
-		*/
-		updateNewsFeed();
-		setInterval(updateNewsFeed, 15 * minute);
+		// Use the widgets to setup the app
+		renderTemplate('app', widgets, function(renderedApp) {
+			
+			
+			// Set the app
+			$(".mirror-app").html(renderedApp);
+			
+			
+			
+			
+			
+			
+			// Variables to make scheduling a bit more verbose
+			var second = 1000;
+			var minute = second * 60;
+			var hour = minute * 60;
+			
+			
+			/*
+				The Clock Widget
+			*/
+			updateClock();
+			setInterval(updateClock, 0.5 * second);
+			
+			
+			if (CONFIG.clock.secondsIndicator) {
+				setInterval(function() {
+					$(".widget.clock .seperator").toggleClass("on", (clockSeperator = !clockSeperator));
+				}, second);
+			}
+			
+			
+			/*
+				The Quote widget
+			*/
+			updateQuote();
+			setInterval(updateQuote, hour);
+			
+			
+			/*
+				The Calendar widget
+			*/
+			updateCalendar();
+			setInterval(updateCalendar, 5 * minute);
+			
+			
+			/*
+				The Weather widget
+			*/
+			updateWeather();
+			setInterval(updateWeather, 10 * minute);
+			
+			
+			/*
+				The News Widget
+			*/
+			updateNewsFeed();
+			setInterval(updateNewsFeed, 15 * minute);
+			
+			
+			/*
+				The Trello Widget
+			*/
+			updateTrello();
+			setInterval(updateTrello, 5 * minute);
+		});
 	});
 	
 	
@@ -115,10 +168,26 @@
 		return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 	}
 	
+	/** Adds a <script> to the html and calls a callback when it loaded */
+	function loadScript(src, callback) {
+		
+		// ref: http://stackoverflow.com/questions/12820953/asynchronous-script-loading-callback
+		var s = document.createElement('script');
+		s.src = src;
+		s.async = true;
+		s.onreadystatechange = s.onload = function() {
+			if (!callback.done && (!s.readyState || /loaded|complete/.test(s.readyState))) {
+				callback.done = true;
+				callback();
+			}
+		};
+		document.querySelector('head').appendChild(s);
+	}
+	
 	/** Render a template, calling `success` with the render */
 	function renderTemplate(template, data, success) {
 		
-		$.get('templates/'+template, function(rawTemplate) {
+		$.get('templates/'+template+'.html', function(rawTemplate) {
 			success(Handlebars.compile(rawTemplate)(data));
 		});
 	}
@@ -154,9 +223,7 @@
 		if (params.time !== lastClockUpdate) {
 			
 			// Render the clock
-			renderTemplate('clock.html', params, function(html) {
-				$(".clock-widget").html(html);
-			});
+			renderTemplateTo('.widget.clock', 'clock', params);
 			
 			// Remember when last updated
 			// -> Uses the param which updates the most
@@ -195,7 +262,7 @@
 		
 		
 		// Render the quote
-		renderTemplateTo('.quote-widget', 'quote.html', {
+		renderTemplateTo('.widget.quote', 'quote', {
 			message: quote.quoteText.trim(),
 			author: (author.length === 0) ? "unknown" : author
 		});
@@ -213,7 +280,7 @@
 	function updateCalendar() {
 		
 		// Get the iCal data
-		proxyLink({url: CONFIG.ical.url, success: processCalendar});
+		proxyLink({url: CONFIG.calendar.url, success: processCalendar});
 	}
 	
 	/** Processes ical data to render it */
@@ -237,7 +304,7 @@
 		
 		
 		// Render the events to the calendar widget
-		renderTemplateTo('.calendar-widget', 'calendar.html', {
+		renderTemplateTo('.widget.calendar', 'calendar', {
 			events: events,
 			noEvents: events.length === 0
 		});
@@ -434,7 +501,7 @@
 		
 		
 		// Render the template into the weather widget
-		renderTemplateTo('.weather-widget', 'weather.html', params);
+		renderTemplateTo('.widget.weather', 'weather', params);
 		
 	}
 	
@@ -481,18 +548,81 @@
 				
 				var xml = $.parseXML(data);
 				
+				var limit = CONFIG.news.stories;
+				
 				var params = {
-					items: $(xml).find("item").slice(0,3).map(function() {
+					items: $(xml).find("item").slice(0,limit).map(function() {
 						return $(this).find("title").text();
 					}).toArray()
 				};
 				
-				renderTemplateTo('.news-widget', 'news.html', params);
+				renderTemplateTo('.widget.news', 'news', params);
 			}
 			
 		});
 	}
 	
+	
+	
+	
+	/*
+	 *	Trello Widget
+	 */
+	function updateTrello() {
+		
+		// If trello isn't defined, don't bother updading
+		if (CONFIG.trello === undefined) {
+			return;
+		}
+		
+		
+		// If the Trello lib hasn't been downloaded, download it
+		if (typeof Trello === "undefined") {
+			
+			// Load the script through js so we can insert the appkey
+			// Meaning the appkey isn't stored in the html & therefore the git repo
+			// Calls updateTrello `async-recursively` when trello was downloaded
+			// TODO: catch if multiple attempts fail?
+			var src =  'https://api.trello.com/1/client.js?key=' + CONFIG.trello.appkey;
+			loadScript(src, updateTrello);
+			return;
+		}
+		
+		
+		// Authorise the js app to use the user's trello boards
+		Trello.authorize({
+			type: 'popup',
+			name: 'Smart(ish) Mirror',
+			scope: {
+				read: 'true',
+				write: 'false'
+			},
+			expiration: 'never',
+			success: updateTrelloWithAuth,
+			error: function() {
+				console.log("Trello Auth failed");
+			}
+		});
+	}
+	
+	function updateTrelloWithAuth() {
+		
+		// Get the board's info
+		var base = '/lists/' + CONFIG.trello.listId;
+		Trello.get(base, function(board) {
+			
+			// Get the cards on the board
+			Trello.get(base + '/cards', function(cards) {
+				
+				// With the board & cards, render our widget
+				renderTemplateTo('.widget.trello', 'trello', {
+					board: board,
+					cards: cards
+				});
+			});
+		});
+		
+	}
 	
 	
 	
