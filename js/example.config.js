@@ -20,7 +20,6 @@ var MIRROR_CONF = {
 	right: [
 		{
 			name: "clock",
-			secondsIndicator: false
 		},
 		{
 			name: "calendar",

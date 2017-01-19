@@ -24,7 +24,9 @@
     * `left` Widgets are displayed down the left hand side
     * `right` Widgets are displayed down the right hand side
     * The `bottom` widget is a single widget object to display at the bottom. Right now only the `quote` widget works well here
-3. Modify the keys for your widgets
+3. Modify the parameters for your widgets
+    * `clock.timeFormat` is the format time will be displayed in [(format)](https://momentjs.com/docs/#/parsing/string-format/)
+    * `clock.dateFormat` is the format the date will be displayed in [(format)](https://momentjs.com/docs/#/parsing/string-format/)
     * `calendar.url` is the url to a shared iCalendar (e.g. generated in iOS's Calendar app)
     * `weather.apikey` is your api key for [Open Weather Map](https://openweathermap.org), you'll need to [generate a one](https://openweathermap.org/appid)
     * `weather.location` is the default location used to get your weather forecast, used if your location cannot be determined, [find your city](http://openweathermap.org/help/city_list.txt)
@@ -37,3 +39,5 @@
 * Doesn't handle multiple widgets of the same type
 * Handle Trello library fetching failing
 * Some non-popup based way of authenticating with Trello
+* Better way of storing config & default values
+* Perhaps a more user-friendly config like yaml?

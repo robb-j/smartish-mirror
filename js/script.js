@@ -13,7 +13,6 @@
 	 *	Internal Properties
 	 */
 	var lastClockUpdate = "";
-	var clockSeperator = false;
 	
 	var CONFIG = {};
 	
@@ -79,14 +78,7 @@
 				The Clock Widget
 			*/
 			updateClock();
-			setInterval(updateClock, 0.5 * second);
-			
-			
-			if (CONFIG.clock.secondsIndicator) {
-				setInterval(function() {
-					$(".widget.clock .seperator").toggleClass("on", (clockSeperator = !clockSeperator));
-				}, second);
-			}
+			setInterval(updateClock, 0.2 * second);
 			
 			
 			/*
@@ -211,12 +203,21 @@
 	/** Updates the clock widget */
 	function updateClock() {
 		
+		// Get the formats from the CONFIG
+		var timeFormat = CONFIG.clock.timeFormat;
+		var dateFormat = CONFIG.clock.dateFormat;
+		
+		
+		// If not set, use a default value
+		if (timeFormat === undefined) { timeFormat = "h:mm a"; }
+		if (dateFormat === undefined) { dateFormat = "Do MMMM YYYY"; }
+		
+		
 		// The params to render the clock
 		var params = {
-			hours: moment().format("h"),
-			minutes: moment().format("mm a"),
+			time: moment().format(timeFormat),
 			day: moment().format("dddd,"),
-			date: moment().format("Do MMMM YYYY")
+			date: moment().format(dateFormat)
 		};
 		
 		// If the time hasn't changed since the last tick, don't re-render
