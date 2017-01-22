@@ -2,6 +2,7 @@ var MIRROR_CONF = {
 	
 	left: [
 		{
+			name: "weather",
 			apikey: "api key for https://openweathermap.org/",
 			location: "your default location id for https://openweathermap.org/ (used if no geolocation)",
 			usePrecise: true,
