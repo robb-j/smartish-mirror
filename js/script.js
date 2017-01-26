@@ -18,6 +18,8 @@
 	
 	var CONFIG = {};
 	
+	var templateCache = {};
+	
 	
 	
 	
@@ -181,8 +183,19 @@
 	/** Render a template, calling `success` with the render */
 	function renderTemplate(template, data, success) {
 		
+		// If we've already compiled the template, use that
+		if (templateCache.hasOwnProperty(template)) {
+			success(templateCache[template](data));
+		}
+		
+		// Otherwise fetch the raw template
 		$.get('templates/'+template+'.html', function(rawTemplate) {
-			success(Handlebars.compile(rawTemplate)(data));
+			
+			// Compile the template
+			templateCache[template] = Handlebars.compile(rawTemplate);
+			
+			// Render with it
+			success(templateCache[template](data));
 		});
 	}
 	
