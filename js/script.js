@@ -186,6 +186,7 @@
 		// If we've already compiled the template, use that
 		if (templateCache.hasOwnProperty(template)) {
 			success(templateCache[template](data));
+			return;
 		}
 		
 		// Otherwise fetch the raw template
