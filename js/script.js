@@ -1,9 +1,11 @@
+/* jshint esversion:6 */
+
 /**
  *	The script that powers the app
  *	Updated: Dec 2016
  *	@author robb-j
  */
-(function($, moment, Handlebars) {
+(function($, moment, Handlebars, _) {
 	
 	
 	
@@ -608,19 +610,56 @@
 	
 	function updateTrelloWithAuth() {
 		
-		// Get the board's info
+		
 		var base = '/lists/' + CONFIG.trello.listId;
-		Trello.get(base, function(board) {
+		
+		var board = null;
+		
+		
+		// A promise to fetch the board
+		var fetchBoard = Trello.get(base);
+		
+		
+		// A promise to get the cards from the board
+		var fetchCards = fetchBoard.then(function(cards) {
+			return Trello.get(base + '/cards?checklists=all');
+		});
+		
+		
+		// Executes when the other promises both resolver
+		Promise.all([fetchBoard, fetchCards]).then(values => {
 			
-			// Get the cards on the board
-			Trello.get(base + '/cards', function(cards) {
+			// Unpack the previous promise's values
+			var [board, cards] = values;
+			
+			
+			// Format each card for rendering
+			var processedCards = _.map(cards, function(card) {
 				
-				// With the board & cards, render our widget
-				renderTemplateTo('.widget.trello', 'trello', {
-					board: board,
-					cards: cards
-				});
+				// Parse each card to simplify for rendering
+				return {
+					name: card.name,
+					lists: _.map(card.checklists, function(list) {
+						
+						// Get the list its name and total items
+						return {
+							name: list.name,
+							total: list.checkItems.length,
+							complete: _.reduce(list.checkItems, function(count, item) {
+								return count + (item.state == 'complete') ? 1 : 0;
+							}, 0)
+						};
+					})
+				};
 			});
+	
+	
+			// With the board & cards, render our widget
+			renderTemplateTo('.widget.trello', 'trello', {
+				board: board,
+				cards: processedCards
+			});
+			
 		});
 		
 	}
@@ -629,4 +668,4 @@
 	
 	
 	
-})($, moment, Handlebars);
+})($, moment, Handlebars, _);

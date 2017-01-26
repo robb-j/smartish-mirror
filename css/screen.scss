@@ -126,8 +126,12 @@ html body {
                     margin-bottom: 0px;
                 }
                 
+                > ul { padding-left: 0px; }
+                
                 ul {
-                    padding-left: 0px;
+                    // padding-left: 0px;
+                    // padding-left: 20px;
+                    // margin-left: -50px;
                     list-style-image: url('../images/dash.png');
                     
                     li {

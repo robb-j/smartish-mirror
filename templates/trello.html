@@ -7,7 +7,19 @@
     	{{#each cards}}
 			<li>
 				<span class="card-name">{{name}}</span>
+			
+				{{#if lists.length}}
+					
+					<ul>
+					{{#lists}}
+						<li> ({{complete}}/{{total}}) {{name}} </li>
+					{{/lists}}
+					</ul>
+					
+				{{/if}}
+			
 			</li>
+			
 		{{/each}}
     </ul>
     
