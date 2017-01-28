@@ -660,7 +660,7 @@
 							name: list.name,
 							total: list.checkItems.length,
 							complete: _.reduce(list.checkItems, function(count, item) {
-								return count + (item.state == 'complete') ? 1 : 0;
+								return count + ((item.state === 'complete') ? 1 : 0);
 							}, 0)
 						};
 					})
