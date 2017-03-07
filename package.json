@@ -1,0 +1,30 @@
+{
+  "name": "smart-mirror",
+  "version": "0.1.0",
+  "description": "- Rob Anderson, robb-j - A JQuery based webapp to display a heads up for your day",
+  "main": "server.js",
+  "dependencies": {
+    "apidoc": "^0.17.5",
+    "express": "^4.15.2",
+    "handlebars": "^4.0.6",
+    "icloud": "^0.1.0",
+    "lodash": "^4.17.4",
+    "nodemon": "^1.11.0",
+    "requestify": "^0.2.5",
+    "require-directory": "^2.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon --ignore '/public/*' web/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robb-j/smartish-mirror.git"
+  },
+  "author": "robb-j",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/robb-j/smartish-mirror/issues"
+  },
+  "homepage": "https://github.com/robb-j/smartish-mirror#readme"
+}

@@ -1,0 +1,12 @@
+{
+    "esversion": 6,
+    "asi": true,
+    "node": true,
+    "mocha": "BSD",
+    "globals": {
+        "express": true,
+        "_": true,
+        "requestify": true,
+        "config": true
+    }
+}

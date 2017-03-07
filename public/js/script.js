@@ -1,8 +1,6 @@
-/* jshint esversion:6 */
-
 /**
  *	The script that powers the app
- *	Updated: Dec 2016
+ *	Updated: Mar 2016
  *	@author robb-j
  */
 (function($, moment, Handlebars, _) {
@@ -23,9 +21,8 @@
 	
 	
 	
-	/*
-	 *	App Entrypoint
-	 */
+	
+	// App Entrypoint
 	$(document).ready(function() {
 		
 		
@@ -125,27 +122,7 @@
 	
 	
 	
-	/*
-	 *	Utilities
-	 */
-
-	/** Fetches a resource, using proxy.php to get around XSS */
-	function proxyLink(params) {
-		
-		// If no data subobject, add one
-		if (params.data === undefined) {
-			params.data = {};
-		}
-		
-		// Set the data's url to the url to pass to proxy.php
-		params.data.url = encodeURI(params.url);
-		
-		// Set the url to the proxy script
-		params.url = "proxy.php";
-		
-		// Use the modified params with jquery's ajax
-		$.ajax(params);
-	}
+	//	Utilities
 
 	/** Rounds a number to a set number of decimal places */
 	function roundTo(val, dp) {
@@ -190,7 +167,7 @@
 		}
 		
 		// Otherwise fetch the raw template
-		$.get('templates/'+template+'.html', function(rawTemplate) {
+		$.get('templates/'+template+'.hbs', function(rawTemplate) {
 			
 			// Compile the template
 			templateCache[template] = Handlebars.compile(rawTemplate);
@@ -212,9 +189,7 @@
 
 
 
-	/*
-	 *	Clock Widget
-	 */
+	//	Clock Widget
 
 	/** Updates the clock widget */
 	function updateClock() {
@@ -252,22 +227,17 @@
 
 
 
-	/*
-	 *	Quote Widget
-	 */
+	//	Quote Widget
 
 	/** Updates the quotes widget */
 	function updateQuote() {
 		
-		// Fetch from the Quote api
-		proxyLink({
-			url: "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en",
-			success: function(result) {
-				
-				// For some reason the api's single-quote character isn't escaped properly?
-				var processed = result.replace(/\\'/g, '\'');
-				setQuote(JSON.parse(processed));
+		$.ajax('api/quote').then(function(data) {
+			if (data.replace) {
+				var cleaned = data.replace(/\\'/g, "'");
+				data = JSON.parse(cleaned);
 			}
+			setQuote(data)
 		});
 	}
 
@@ -289,15 +259,13 @@
 
 
 
-	/*
-	 *	Calendar Widget
-	 */
+	//	Calendar Widget
 
 	/** Updates the calendar widget */
 	function updateCalendar() {
 		
 		// Get the iCal data
-		proxyLink({url: CONFIG.calendar.url, success: processCalendar});
+		$.ajax('api/calendar').then(processCalendar)
 	}
 	
 	/** Processes ical data to render it */
@@ -458,37 +426,29 @@
 
 
 
-	/*
-	 *	Weather Widget
-	 */
+	
+	//	Weather Widget
 
 	/** Updates the weather widget */
 	function updateWeather() {
 		
-		// Load the default location's weather first
-		proxyLink({
-			url: "http://api.openweathermap.org/data/2.5/weather?" + $.param({
-				appid: CONFIG.weather.apikey, id: CONFIG.weather.location
-			}),
-			success: function(data) {
-				
-				// Process the response & display it
-				processWeather(data, true);
-				
-				// Load the precise weather (using geo-location)
-				if (CONFIG.weather.usePrecise) {
-					preciseWeather();
-				}
+		var query = $.param({
+			location: CONFIG.weather.location
+		});
+		
+		$.ajax('api/weather?'+query).then(function(data) {
+		
+			processWeather(data, true)
+		
+			if (CONFIG.weather.usePrecise) {
+				preciseWeather();
 			}
 		});
+		
 	}
 
-	
 	/** Takes a weather API's response and renders in into .weather-widget */
-	function processWeather(result) {
-		
-		// Parse the result
-		var data = JSON.parse(result);
+	function processWeather(data) {
 		
 		
 		// Get the sunrise & sunset times
@@ -531,15 +491,13 @@
 				
 				// Configure our GET params
 				var params = $.param({
-					appid: CONFIG.weather.apikey,
 					lat: pos.coords.latitude,
 					lon: pos.coords.longitude
 				});
 				
 				// Perform the request & render the result on success
-				proxyLink({
-					url: "http://api.openweathermap.org/data/2.5/weather?" + params,
-					success: processWeather
+				$.ajax('api/weather?'+params).then(function(data) {
+					processWeather(data, true)
 				});
 			});
 		} else {
@@ -551,40 +509,28 @@
 	
 	
 	
-	/*
-	 *	News Widget
-	 */
+	
+	//	News Widget
 	
 	/** Updates the weather widget */
 	function updateNewsFeed() {
 		
 		// Fetch the news from the rss feed
-		proxyLink({
-			url: "http://feeds.bbci.co.uk/news/rss.xml?edition=uk",
-			success: function(data) {
-				
-				var xml = $.parseXML(data);
-				
-				var limit = CONFIG.news.stories;
-				
-				var params = {
-					items: $(xml).find("item").slice(0,limit).map(function() {
-						return $(this).find("title").text();
-					}).toArray()
-				};
-				
-				renderTemplateTo('.widget.news', 'news', params);
-			}
+		$.ajax('api/news').then(function(data) {
 			
+			renderTemplateTo('.widget.news', 'news', {
+				items: _.map(data.headlines.slice(0, CONFIG.news.stories), function(story) {
+					return story[0] + ' (' + story[3] + ')';
+				})
+			});
 		});
 	}
 	
 	
 	
 	
-	/*
-	 *	Trello Widget
-	 */
+	//	Trello Widget
+	
 	function updateTrello() {
 		
 		// If trello isn't defined, don't bother updading
