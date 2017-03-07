@@ -22,4 +22,6 @@ _.forEach(controllers, (controller) => {
 
 
 // Start the server on 3000
-app.listen(3000)
+let port = process.env.MIR_PORT || 3000
+app.listen(port)
+console.log('Mirror running on localhost:'+port);

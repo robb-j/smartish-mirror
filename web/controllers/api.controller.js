@@ -60,8 +60,6 @@ router.get('/weather', (req, res) => {
         query += `&id=${req.query.location}`;
     }
     
-    // let query = `appid=${req.query.apikey}&id=${req.query.location}`
-    
     if (req.query.lat && req.query.lon) {
         query += `&lat=${req.query.lat}`
         query += `&lon=${req.query.lon}`

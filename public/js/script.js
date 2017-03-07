@@ -9,9 +9,8 @@
 	
 	
 	
-	/*
-	 *	Internal Properties
-	 */
+	//	Internal Properties
+	
 	var lastClockUpdate = "";
 	
 	var CONFIG = {};
@@ -518,8 +517,10 @@
 		// Fetch the news from the rss feed
 		$.ajax('api/news').then(function(data) {
 			
+			let numStories = CONFIG.news.stories || 3;
+			
 			renderTemplateTo('.widget.news', 'news', {
-				items: _.map(data.headlines.slice(0, CONFIG.news.stories), function(story) {
+				items: _.map(data.headlines.slice(0, numStories), function(story) {
 					return story[0] + ' (' + story[3] + ')';
 				})
 			});
