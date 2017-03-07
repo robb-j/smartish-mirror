@@ -17,9 +17,17 @@
 - Motivational quotes
 
 
-## Setup
-1. Make a copy of `public/js/example.config.js` called `public/js/config.js`
-2. Arrange your widgets, the order of the objects is the order they will be displayed
+## Installing Node on a pi
+```
+wget http://node-arm.herokuapp.com/node_latest_armhf.deb
+sudo dpkg -i node_latest_armhf.deb
+rm node_latest_armhf.deb
+```
+
+
+## Mirror Setup
+1. Setup the project with `sudo sh setup.sh`
+2. Arrange your widgets in `public/js/config.js`, the order of the objects is the order they will be displayed
     * `left` widgets are displayed down the left
     * `right` widgets down the right
     * The `bottom` widget is a single object to display at the bottom. Right now only the `quote` widget works well here
@@ -29,13 +37,12 @@
      to [generate a one](https://openweathermap.org/appid)
     * `weather.location` is the default location used to get your weather forecast, used if your location cannot be determined, [find your city](http://openweathermap.org/help/city_list.txt)
     * `trello.appkey` Is your Trello app key, [find it here](https://trello.com/app-key)
-    * `trello.listId` Is the identifier of the Trello list you want to display, on [Trello.com](https://Trello.com) visit a card on the list you want and add `.json` to the url. Your listId is in there under `idList`
-4. Make a copy of `web/example.config.js` called `web/config.js`
-5. Add your credentials for the apis you want to use
+    * `trello.listId` Is the identifier of the Trello list you want to display, on [Trello.com](https://trello.com) visit a card on the list you want and add `.json` to the url. Your listId is in there under `idList`
+4. Configure the node server in `web/config.js`
     * `weather.apikey` is your api key for [Open Weather Map](https://openweathermap.org), you'll need
     * `calendar.url` is the url to a shared iCalendar (e.g. generated in iOS's Calendar app)
-6. (optional) Set the port you want the server to run on with `export MIR_PORT=80`
-7. Start the node server with `npm start`
+    * `server.port` is the port the webapp will run on
+5. Start the node server with `npm start`
 
 
 
