@@ -106,7 +106,7 @@
 				The News Widget
 			*/
 			updateNewsFeed();
-			setInterval(updateNewsFeed, 15 * minute);
+			setInterval(updateNewsFeed, 2 * hour);
 			
 			
 			/*
