@@ -3,15 +3,15 @@
 
 // Imports
 const icloud = require('icloud')
-
+const currencyMap = require('currency-symbol-map')
 
 let router = express.Router();
 
 
 
 
-function proxyRequest(res, url) {
-    requestify.get(url).then(response => {
+function proxyRequest(res, url, options) {
+    requestify.get(url, options || {}).then(response => {
         res.send(response.getBody())
     })
     .fail(response => {
@@ -71,6 +71,32 @@ router.get('/weather', (req, res) => {
 router.get('/news', (req, res) => {
     
     proxyRequest(res, `http://gdnws.co.uk/api/pos`)
+})
+
+router.get('/monzo', (req, res) => {
+    
+    let url = `https://api.monzo.com/balance?account_id=${config.monzo.accountId}`;
+    
+    let options = {
+        headers: { Authorization: 'Bearer ' + config.monzo.accessToken }
+    }
+    requestify.get(url, options)
+    .then(response => {
+        
+        let body = response.getBody();
+        let symbol = currencyMap(body.currency)
+        
+        res.send({
+            balance: body.balance / 100,
+            currency: currencyMap(body.currency),
+            today: body.spend_today / 100
+        });
+        
+        // res.send(response.getBody())
+    })
+    .fail(response => {
+        res.status(400).send('Request failed')
+    });
 })
 
 
