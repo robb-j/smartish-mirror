@@ -1,3 +1,5 @@
+'use strict'
+
 
 // Imports
 const winston = require("winston")

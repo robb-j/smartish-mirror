@@ -1,3 +1,5 @@
+'use strict'
+
 
 let router = new express.Router();
 

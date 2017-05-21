@@ -1,3 +1,5 @@
+'use strict'
+
 
 // Imports
 const currencyMap = require('currency-symbol-map')

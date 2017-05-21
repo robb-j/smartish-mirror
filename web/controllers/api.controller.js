@@ -1,3 +1,5 @@
+'use strict'
+
 
 // Imports
 const requestify = require("requestify")

@@ -1,8 +1,9 @@
+'use strict'
+
 
 // Imports
 const winston = require("winston")
 const requestify = require("requestify")
-const Q = require("q")
 
 const JsonStore = require('../utils/jsonStore')
 
