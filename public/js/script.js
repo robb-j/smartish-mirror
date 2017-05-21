@@ -1,3 +1,5 @@
+/* globals MIRROR_CONF, Trello, $, moment, Handlebars */
+
 /**
 *	The script that powers the app
 *	Updated: Mar 2016
@@ -16,7 +18,8 @@
         clock: updateClock,
         calendar: updateCalendar,
         quote: updateQuote,
-        monzo: updateMonzo
+        monzo: updateMonzo,
+        spotify: updateSpotify
     }
     
     // Useful consts
@@ -65,6 +68,7 @@
             
             // Render each widget
             allWidgets.forEach(function(widget) {
+                widget.schedule();
                 widget.update(widget);
             });
         });
@@ -78,15 +82,27 @@
         
         // Add the update method to the widget
         widget.update = updateMap[widget.type];
+        widget.interval = parseUpdate(widget.tick)
         
-        // Schedule the update using the tick option
-        if (widget.update) {
-            setInterval(widget.update, parseUpdate(widget.tick), widget);
+        // Add a function to unschedule the widget's tick
+        widget.unschedule = function() {
+            if (this.updateId) {
+                clearInterval(this.updateId)
+                this.updateId = null
+            }
+        }
+        
+        // Add a function to schedule the widget's tick
+        widget.schedule = function() {
+            this.unschedule()
+            if (this.interval) {
+                this.updateId = setInterval(this.update, this.interval, this)
+            }
         }
         
         // Add a function to render the widget with params
         widget.render = function(params) {
-            renderTemplateTo(widget.selector, widget.type, params);
+            renderTemplateTo(this.selector, this.type, params);
         }
         
         // Store config for global use later
@@ -259,7 +275,6 @@
         
         // Some handy times, formatted for ical data
         var today = moment().format("YYYYMMDD");
-        var tomorrow = moment().add(1, 'days').format("YYYYMMDD");
         
         
         // Get the events that are today
@@ -337,7 +352,6 @@
         
         // Some handy dates
         var today = moment().format("YYYYMMDD");
-        var now = moment();
         var tomorrow = moment().add(1, 'days').format("YYYYMMDD");
         
         
@@ -425,7 +439,7 @@
             
             processWeather(widget, data)
             
-            if (widget.usePrecise) { preciseWeather(); }
+            if (widget.usePrecise) { preciseWeather(widget); }
         });
         
     }
@@ -465,7 +479,7 @@
     }
     
     /** Performs a weather API request using the user's geolocation (if available) */
-    function preciseWeather() {
+    function preciseWeather(widget) {
         
         // Check if geolocation is available
         if (navigator.geolocation) {
@@ -558,15 +572,13 @@
         
         var base = '/lists/' + widget.listId;
         
-        var board = null;
-        
         
         // A promise to fetch the board
         var fetchBoard = Trello.get(base);
         
         
         // A promise to get the cards from the board
-        var fetchCards = fetchBoard.then(function(cards) {
+        var fetchCards = fetchBoard.then(function() {
             return Trello.get(base + '/cards?checklists=all');
         });
         
@@ -615,9 +627,45 @@
     function updateMonzo(widget) {
         
         $.ajax('api/monzo').then(function(data) {
+            widget.render({ data: data });
+        })
+        .catch(function() {
+            widget.render(null);
+        })
+    }
+    
+    
+    
+    
+    // Spotify Widget
+    
+    function updateSpotify(widget) {
+        
+        $.ajax('api/spotify').then(function(data) {
             
-            widget.render(data);
-        });
+            // Assume non-playing
+            if (widget.state !== 'playing' && data.playing) {
+                
+                // Go into playing state
+                widget.unschedule()
+                widget.updateId = setInterval(widget.update, 3000, widget)
+                widget.state = 'playing'
+                console.log('Spotify: entering playing state');
+            }
+            
+            if (widget.state === 'playing' && !data.playing) {
+                
+                // Go into sleep state
+                widget.schedule()
+                widget.state = 'sleep'
+                console.log('Spotify: entering sleep state');
+            }
+            
+            widget.render({data: data})
+        })
+        .catch(function() {
+            widget.render(null)
+        })
     }
     
     

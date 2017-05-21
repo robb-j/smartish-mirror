@@ -2,11 +2,13 @@
     "esversion": 6,
     "asi": true,
     "node": true,
+    "browser": true,
     "mocha": "BSD",
+    "undef": true,
+    "unused": true,
     "globals": {
         "express": true,
         "_": true,
-        "requestify": true,
         "config": true
     }
 }

@@ -3,3 +3,8 @@
 /web/config.js
 
 /node_modules
+
+/logs/access.log
+/logs/error.log
+
+/store/auth.json

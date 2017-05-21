@@ -1,5 +1,9 @@
 <h2 class="widget-title">Monzo</h2>
 <div class="widget-content">
-    <h3> {{currency}}{{balance}} </h3>
-    <p> Today: {{currency}}{{today}} </p>
-</div>
+    {{#if data}}
+        <h3> {{data.currency}}{{data.balance}} </h3>
+        <p> Today: {{data.currency}}{{data.today}} </p>
+    {{else}}
+        <p> <a href="auth/monzo" class="button"> Please login </a> </p>
+    {{/if}}
+</div

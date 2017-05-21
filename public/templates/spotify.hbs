@@ -1,0 +1,11 @@
+<h2 class="widget-title">Spotify</h2>
+<div class="widget-content">
+    {{#if data}}
+        
+        <h3> {{data.track}} </h3>
+        <p>&dash; {{data.artist}}</p>
+        
+    {{else}}
+        <p> <a href="auth/spotify" class="button"> Please login </a> </p>
+    {{/if}}
+</div

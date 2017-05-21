@@ -1,7 +1,5 @@
-'use strict'
 
-
-let router = express.Router();
+let router = new express.Router();
 
 router.use('/', express.static('public'));
 

@@ -1,9 +1,35 @@
-'use strict'
 
 global.express = require('express')
 global._ = require('lodash')
 global.requestify = require('requestify')
 global.config = require('./config')
+
+
+// Imports
+const winston = require("winston")
+
+
+
+// Setup the logger
+winston.configure({
+    transports: [
+        new (winston.transports.File)({
+            name: 'info-file',
+            filename: 'logs/access.log',
+            level: 'info'
+        }),
+        new (winston.transports.File)({
+            name: 'error-file',
+            filename: 'logs/error.log',
+            level: 'error'
+        }),
+        new (winston.transports.Console)({
+            name: 'console',
+            level: 'error'
+        })
+    ]
+});
+
 
 
 // Create our express app
@@ -24,4 +50,4 @@ _.forEach(controllers, (controller) => {
 // Start the server on 3000
 let port = config.server.port || 3000
 app.listen(port)
-console.log('Mirror running on localhost:'+port);
+console.log('Setup on localhost:'+port);

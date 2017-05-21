@@ -90,6 +90,17 @@ html body {
             margin: 0px;
         }
         
+        /* Anchors */
+        a { color: $textColour; }
+        
+        .button {
+            
+            margin: -4px -10px;
+            padding: 4px 10px;
+            border: 1px solid $textColour;
+            border-radius: 6px;
+        }
+        
         
         
         td { padding: 5px; }
