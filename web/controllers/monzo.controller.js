@@ -60,11 +60,11 @@ function getAuth() {
     
     // Check the auth is valid via a ping
     return requestify.get(`https://api.monzo.com/ping/whoami`, options(auth))
-    .then(response => {
+    .then(() => {
         
-        // Get the response, resolve if authenticated
-        let json = response.getBody();
-        if (json.authenticated) return auth
+        return auth
+    })
+    .fail(() => {
         
         // If not authenticated, fail if we don't have a refresh token
         if (!auth.refresh_token) return Q.fail()
@@ -94,6 +94,12 @@ function getAuth() {
             
             // Resolve with the auth
             return newAuth
+        })
+        .fail(() => {
+            
+            winston.info('Monzo reauth failed');
+            
+            return Q.fail()
         })
     })
 }
