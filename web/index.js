@@ -1,3 +1,5 @@
+'use strict'
+
 
 global.express = require('express')
 global._ = require('lodash')
