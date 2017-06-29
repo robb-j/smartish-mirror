@@ -515,8 +515,8 @@
         $.ajax('api/news').then(function(data) {
             
             let numStories = widget.stories || 3;
-            let stories = _.map(data.headlines.slice(0, numStories), function(story) {
-                return story[0] + ' (' + story[3] + ')';
+            let stories = _.map(data.slice(0, numStories), function(story) {
+                return story.title
             });
             
             widget.render({ items: stories });

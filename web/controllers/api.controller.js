@@ -3,6 +3,7 @@
 
 // Imports
 const requestify = require("requestify")
+const xml2js = require("xml2js")
 
 
 
@@ -71,7 +72,31 @@ router.get('/weather', (req, res) => {
 
 router.get('/news', (req, res) => {
     
-    proxyRequest(res, `http://gdnws.co.uk/api/pos`)
+    let options = {
+        explicitArray: false,
+        trim: true,
+        ignoreAttrs: true
+    }
+    
+    console.log('a', new Date())
+    
+    requestify.get('http://feeds.bbci.co.uk/news/rss.xml')
+    .then(response => {
+        
+        console.log('b', new Date())
+        
+        xml2js.parseString(response.body, options, function(err, data) {
+            
+            console.log('c', new Date())
+            
+            res.send(data.rss.channel.item)
+        })
+    })
+    .fail(() => {
+        res.status(400).send('Request Failed')
+    })
+    
+    // proxyRequest(res, `http://gdnws.co.uk/api/pos`)
 })
 
 
