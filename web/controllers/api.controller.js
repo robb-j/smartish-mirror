@@ -78,17 +78,9 @@ router.get('/news', (req, res) => {
         ignoreAttrs: true
     }
     
-    console.log('a', new Date())
-    
     requestify.get('http://feeds.bbci.co.uk/news/rss.xml')
     .then(response => {
-        
-        console.log('b', new Date())
-        
         xml2js.parseString(response.body, options, function(err, data) {
-            
-            console.log('c', new Date())
-            
             res.send(data.rss.channel.item)
         })
     })

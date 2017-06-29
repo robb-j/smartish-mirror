@@ -20,7 +20,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon --watch 'web' web/index.js"
+    "start": "nodemon --watch 'web' web/index.js",
+    "prod": "node web/index.js"
   },
   "repository": {
     "type": "git",
