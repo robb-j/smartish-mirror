@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
         
         return Q.all([
             auth,
-            requestify.get(`${api}/accounts`, options(auth))
+            requestify.get(`${api}/accounts?account_type=uk_retail`, options(auth))
         ])
     })
     .then(([auth, response]) => {
@@ -36,9 +36,9 @@ router.get('/', (req, res) => {
         let body = response.getBody();
         
         res.send({
-            balance: body.balance / 100,
+            balance: (body.balance / 100).toFixed(2),
             currency: currencyMap(body.currency),
-            today: body.spend_today / 100
+            today: (body.spend_today / 100).toFixed(2)
         });
     })
     .fail(() => {
