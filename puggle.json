@@ -1,0 +1,19 @@
+{
+  "preset": {
+    "name": "robb-j:node",
+    "version": "0.1.6"
+  },
+  "plugins": {
+    "npm": "0.1.0",
+    "jest": "0.1.0",
+    "prettier": "0.1.0",
+    "eslint": "0.1.0"
+  },
+  "params": {
+    "npm": {
+      "packageName": "smartish-mirror",
+      "packageInfo": "A dashboard for my smark mirror",
+      "repository": "robb-j/smartish-mirror"
+    }
+  }
+}
