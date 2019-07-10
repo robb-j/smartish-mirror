@@ -11,7 +11,7 @@ module.exports = {
   //
   // https://docs.monzo.com/#acquire-an-access-token
   //
-  async createFromCLI() {
+  async createFromCLI(dashund) {
     const callbackURL = 'http://localhost:1234/callback'
     const colorUrl = yellow().underline
 
@@ -89,32 +89,73 @@ module.exports = {
         body
       )
 
-      // IDEA: you could pick an account ~> best to do at the widget level
-      //
-      // let headers = { authorization: `Bearer ${auth.access_token}` }
-      //
-      // let { data: accounts } = await axios.get(
-      //   'https://api.monzo.com/accounts',
-      //   { headers }
-      // )
-      //
-      // let { chosenAccount } = await prompts({
-      //   type: 'select',
-      //   name: 'chosenAccount',
-      //   message: 'Pick an account to display'
-      // })
+      // Use our new auth to get the user's accounts
+      let { data: accounts } = await axios.get(
+        'https://api.monzo.com/accounts',
+        { headers: { authorization: `Bearer ${auth.access_token}` } }
+      )
 
-      // { access_token, refresh_token, client_id, expires_in, token_type, user_id }
-      // plus { client_id, client_secret, expires_at }
-      return {
-        ...auth,
-        client_id: clientId,
-        client_secret: clientSecret,
-        expires_at: Date.now() + auth.expires_in * 1000
-      }
+      // Pick the user's first active account
+      let accountId = accounts.filter(acc => !acc.closed)[0]
+
+      return processAuth(auth, clientId, clientSecret, accountId)
     } catch (error) {
-      debug(`failed, ${error.message}`)
+      debug(`#createFromCLI failed, ${error.message}`)
       throw error
     }
+  },
+
+  //
+  // If the token has expired
+  //
+  hasExpired(token) {
+    return typeof token.expires_at === 'number' && token.expires_at < Date.now()
+  },
+
+  //
+  // https://docs.monzo.com/#acquire-an-access-token
+  //
+  async refreshToken(token) {
+    try {
+      debug(`#refreshToken started`)
+
+      let body = querystring.stringify({
+        grant_type: 'refresh_token',
+        client_id: token.client_id,
+        client_secret: token.client_secret,
+        refresh_token: token.refresh_token
+      })
+
+      debug(`#refreshToken body=${body}`)
+
+      let { data: auth } = await axios.post(
+        'https://api.monzo.com/oauth2/token',
+        body
+      )
+
+      debug(`#refreshToken body=${JSON.stringify(auth)}`)
+
+      return processAuth(
+        auth,
+        token.client_id,
+        token.client_secret,
+        token.account_id
+      )
+    } catch (error) {
+      debug(`#refreshToken failed, ${error.message}`)
+      throw error
+    }
+  }
+}
+
+// { access_token, refresh_token, client_id, expires_in, token_type, user_id }
+// plus { client_id, client_secret, expires_at }
+function processAuth(auth, clientId, clientSecret, accountId) {
+  return {
+    ...auth,
+    client_id: clientId,
+    client_secret: clientSecret,
+    account_id: accountId,
+    expires_at: Date.now() + auth.expires_in * 1000
   }
 }
