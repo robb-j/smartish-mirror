@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+body section {
+  flex: 1;
+}
+.footer {
+  border-top: 1px dashed #ccc;
+  padding: 1.5rem;
+}
+.navbar.is-primary {
+  background-color: #323264;
+}
+#log {
+  max-height: 33vh;
+  overflow-y: auto;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier,
+    monospace;
+  border-left: 5px solid #209cee;
+  border-radius: 0;
+  line-height: 1.5;
+  overflow: auto;
+  background-color: #353a43;
+  color: #d6ecfc;
+  padding: 1.25rem 1.5rem;
+  white-space: pre;
+  word-wrap: normal;
+}
+#log .date {
+  color: #9f9f9f;
+}
+summary {
+  cursor: pointer;
+}

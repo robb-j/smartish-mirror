@@ -38,7 +38,6 @@ module.exports = [
     handler: async ctx => {
       let since = new Date()
       since.setDate(since.getDate() - 5)
-      console.log(since)
 
       let token = ctx.tokens.get('Monzo')
       let headers = { authorization: `Bearer ${token.access_token}` }
