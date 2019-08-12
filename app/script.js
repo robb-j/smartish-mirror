@@ -24,6 +24,7 @@ function log(...messages) {
 }
 
 const fetchJSON = url => fetch(url).then(r => r.json())
+
 // const div = (attrs = {}, children = []) => html('div', attrs, children)
 
 const endpointID = endpoint => endpoint.name.replace(/\//g, '-')
@@ -34,9 +35,10 @@ const jsonify = data => JSON.stringify(data, null, 2)
 
 // const pipe = (...args) => arg0 => args.reduce((result, fn) => fn(result), arg0)
 
-function renderEndpoint(endpoint, data = undefined) {
+function renderEndpoint(endpoint, data = undefined, status = 404) {
   return html('details', { id: endpointID(endpoint), className: 'endpoint' }, [
     html('summary', { className: 'endpoint-info' }, [
+      html('span', { className: `status-code is-${status}` }, status),
       html('strong', {}, endpoint.name),
       ` – every ${endpoint.interval} – updated at ${formatTime()}`
     ]),
@@ -44,9 +46,9 @@ function renderEndpoint(endpoint, data = undefined) {
   ])
 }
 
-function updateEndpoint(endpoint, data) {
+function updateEndpoint(endpoint, data, status) {
   let elem = document.getElementById(endpointID(endpoint))
-  elem.replaceWith(renderEndpoint(endpoint, jsonify(data)))
+  elem.replaceWith(renderEndpoint(endpoint, jsonify(data), status))
 }
 
 const findEndpoint = (endpoints, name) => endpoints.find(e => e.name === name)
@@ -67,7 +69,7 @@ const findEndpoint = (endpoints, name) => endpoints.find(e => e.name === name)
 
   socket.addEventListener('message', payload => {
     try {
-      let { type, data } = JSON.parse(payload.data)
+      let { type, data, status } = JSON.parse(payload.data)
 
       log(`SOCK_MSG: type=${type}`)
 
@@ -75,7 +77,7 @@ const findEndpoint = (endpoints, name) => endpoints.find(e => e.name === name)
 
       let endpoint = findEndpoint(endpoints, type)
 
-      updateEndpoint(endpoint, data)
+      updateEndpoint(endpoint, data, status)
     } catch (error) {
       log(`SOCKET_ERROR: ${error.message}`)
     }
@@ -84,9 +86,9 @@ const findEndpoint = (endpoints, name) => endpoints.find(e => e.name === name)
   for (let endpoint of endpoints) {
     log(`GET: /${endpoint.name}`)
 
-    let { data } = await fetchJSON(`${API_URL}/${endpoint.name}`)
+    let { data, status } = await fetchJSON(`${API_URL}/${endpoint.name}`)
 
-    app.append(renderEndpoint(endpoint, jsonify(data)))
+    app.append(renderEndpoint(endpoint, jsonify(data), status))
 
     log(`SOCK_SEND: type=sub target=${endpoint.name}`)
     socket.send(JSON.stringify({ type: 'sub', target: endpoint.name }))
