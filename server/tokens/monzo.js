@@ -90,13 +90,12 @@ module.exports = {
       )
 
       // Use our new auth to get the user's accounts
-      let { data: accounts } = await axios.get(
-        'https://api.monzo.com/accounts',
-        { headers: { authorization: `Bearer ${auth.access_token}` } }
-      )
+      let { data } = await axios.get('https://api.monzo.com/accounts', {
+        headers: { authorization: `Bearer ${auth.access_token}` }
+      })
 
       // Pick the user's first active account
-      let accountId = accounts.filter(acc => !acc.closed)[0]
+      let accountId = data.accounts.filter(acc => !acc.closed)[0].id
 
       return processAuth(auth, clientId, clientSecret, accountId)
     } catch (error) {
