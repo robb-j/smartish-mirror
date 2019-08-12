@@ -54,5 +54,28 @@ module.exports = [
 
       return res.data
     }
+  },
+  {
+    name: 'spotify/current',
+    requiredTokens: ['Spotify'],
+    interval: '10m',
+    handler: async ctx => {
+      let token = ctx.tokens.get('Spotify')
+
+      console.log(token)
+
+      let headers = { Authorization: `Bearer ${token.access_token}` }
+      let params = {}
+
+      let res = await axios.get(
+        'https://api.spotify.com/v1/me/player/currently-playing',
+        {
+          params,
+          headers
+        }
+      )
+
+      return res.data
+    }
   }
 ]

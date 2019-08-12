@@ -1,3 +1,4 @@
 module.exports = {
-  Monzo: require('./monzo')
+  Monzo: require('./monzo'),
+  Spotify: require('./spotify')
 }
