@@ -89,6 +89,12 @@ module.exports = {
         body
       )
 
+      await prompts({
+        type: 'invisible',
+        name: 'confirmedWait',
+        message: 'Confirmed in the app too? (press enter)'
+      })
+
       // Use our new auth to get the user's accounts
       let { data } = await axios.get('https://api.monzo.com/accounts', {
         headers: { authorization: `Bearer ${auth.access_token}` }
