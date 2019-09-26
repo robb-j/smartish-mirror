@@ -58,13 +58,11 @@ module.exports = [
   {
     name: 'spotify/current',
     requiredTokens: ['Spotify'],
-    interval: '10m',
+    interval: '5s',
     handler: async ctx => {
       let token = ctx.tokens.get('Spotify')
 
-      console.log(token)
-
-      let headers = { Authorization: `Bearer ${token.access_token}` }
+      let headers = { authorization: `Bearer ${token.accessToken}` }
       let params = {}
 
       let res = await axios.get(

@@ -47,7 +47,7 @@ module.exports = {
 
     const state = randomString({ length: 16, type: 'url-safe' })
 
-    const scopes = 'user-read-playback-state'
+    const scope = 'user-read-playback-state user-read-playback-state'
 
     const redir =
       'https://accounts.spotify.com/authorize?' +
@@ -55,7 +55,7 @@ module.exports = {
         response_type: 'code',
         client_id: clientId,
         redirect_uri: callbackURL,
-        scopes: scopes,
+        scope: scope,
         state: state
       })
 
@@ -69,7 +69,7 @@ module.exports = {
       })
 
       app.get('/callback', (req, res) => {
-        error = req.query.error
+        errorMessage = req.query.error
         code = req.query.code
         returnedState = req.query.state
         res.send('Sweet! go back to the terminal')
@@ -96,17 +96,24 @@ module.exports = {
         client_secret: clientSecret
       })
 
-      // const authorization = Buffer.from(`${clientId}:${clientSecret}`)
-      //   .toString('base64')
-
-      // const headers = { Authorization: `Bearer: ${authorization}` }
-
-      let { data: auth } = await axios.post(
+      let { data } = await axios.post(
         'https://accounts.spotify.com/api/token',
         body
       )
 
-      return processAuth(auth, clientId, clientSecret)
+      console.log(data)
+
+      return makeToken(
+        data.access_token,
+        data.refresh_token,
+        data.token_type,
+        data.scope,
+        data.expires_in,
+        clientId,
+        clientSecret
+      )
+
+      // return processAuth(auth, clientId, clientSecret)
     } catch (error) {
       debug(`#createFromCLI failed, ${error.message}`)
       throw error
@@ -114,21 +121,64 @@ module.exports = {
   },
 
   hasExpired(token) {
-    // ...
-    return false
-  }
+    return token.expiresAt < Date.now()
+  },
 
-  // async refreshToken(token) {
-  // }
+  async refreshToken(token) {
+    try {
+      debug(`#refreshToken started`)
+
+      let body = querystring.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: token.refreshToken,
+        client_id: token.clientId,
+        client_secret: token.clientSecret
+      })
+
+      debug(`#refreshToken body=${body}`)
+
+      // https://developer.spotify.com/documentation/general/guides/authorization-guide/#example-2
+      let { data } = await axios.post(
+        'https://accounts.spotify.com/api/token',
+        body
+      )
+
+      debug(`#refreshToken body=${JSON.stringify(data)}`)
+
+      return makeToken(
+        data.access_token,
+        token.refreshToken,
+        data.token_type,
+        data.scope,
+        data.expires_in,
+        token.clientId,
+        token.clientSecret
+      )
+    } catch (error) {
+      debug(`#refreshToken failed, ${error.message}`)
+      throw error
+    }
+  }
 }
 
-// { access_token, refresh_token, client_id, expires_in, token_type }
-// plus { client_secret, expires_at }
-function processAuth(auth, clientId, clientSecret) {
+function makeToken(
+  accessToken,
+  refreshToken,
+  tokenType,
+  scope,
+  expiresIn,
+  clientId,
+  clientSecret
+) {
+  const expiresAt = Date.now() + expiresIn * 1000
+
   return {
-    ...auth,
-    client_id: clientId,
-    client_secret: clientSecret,
-    expires_at: Date.now() + auth.expires_in * 1000
+    accessToken,
+    refreshToken,
+    tokenType,
+    scope,
+    expiresAt,
+    clientId,
+    clientSecret
   }
 }
