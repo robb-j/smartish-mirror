@@ -1,14 +1,16 @@
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 body section {
   flex: 1;
+  overflow-y: auto;
 }
 .footer {
   border-top: 1px dashed #ccc;
   padding: 1.5rem;
+  overflow-y: auto;
 }
 .navbar.is-primary {
   background-color: #323264;
@@ -27,6 +29,7 @@ body section {
   padding: 1.25rem 1.5rem;
   white-space: pre;
   word-wrap: normal;
+  max-height: 320px;
 }
 #log .date {
   color: #9f9f9f;
