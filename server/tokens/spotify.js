@@ -101,8 +101,6 @@ module.exports = {
         body
       )
 
-      console.log(data)
-
       return makeToken(
         data.access_token,
         data.refresh_token,
