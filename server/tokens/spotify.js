@@ -12,7 +12,7 @@ module.exports = {
   // https://developer.spotify.com/documentation/general/guides/authorization-guide/
   //
   async createFromCLI(dashund) {
-    const callbackURL = 'http://localhost:1234/callback'
+    const callbackURL = dashund.makeCallbackURL()
     const colorUrl = yellow().underline
 
     console.log(

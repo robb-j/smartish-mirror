@@ -12,7 +12,7 @@ module.exports = {
   // https://docs.monzo.com/#acquire-an-access-token
   //
   async createFromCLI(dashund) {
-    const callbackURL = 'http://localhost:1234/callback'
+    const callbackURL = dashund.makeCallbackURL()
     const colorUrl = yellow().underline
 
     console.log(
