@@ -117,8 +117,6 @@ function makeOAuth2Token({
 
         let { data } = await axios.post(tokenEndpoint, body, { headers })
 
-        console.log(data)
-
         let token = makeToken(
           data.access_token,
           data.refresh_token,
