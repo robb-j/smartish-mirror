@@ -1,4 +1,3 @@
-const querystring = require('querystring')
 const axios = require('axios')
 
 const bearerHeader = token => ({ authorization: `Bearer ${token}` })
@@ -114,16 +113,35 @@ module.exports = [
     handler: async ctx => {
       let { secretKey, lat, lng } = ctx.tokens.get('DarkSky')
 
-      let params = querystring.stringify({
+      let params = {
         exclude: 'minutely,daily',
         units: 'si'
-      })
+      }
 
       let res = await axios.get(
-        `https://api.darksky.net/forecast/${secretKey}/${lat},${lng}?${params}`
+        `https://api.darksky.net/forecast/${secretKey}/${lat},${lng}`,
+        { params }
       )
 
       return res.data
+    }
+  },
+  {
+    name: 'guardian/latest',
+    requiredTokens: ['Guardian'],
+    interval: '10m',
+    handler: async ctx => {
+      let { secretKey } = ctx.tokens.get('Guardian')
+
+      let params = {
+        'api-key': secretKey
+      }
+
+      let res = await axios.get(`https://content.guardianapis.com/search`, {
+        params
+      })
+
+      return res.data.response.results
     }
   }
 ]
