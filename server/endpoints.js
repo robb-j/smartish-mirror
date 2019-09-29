@@ -1,4 +1,7 @@
+const querystring = require('querystring')
 const axios = require('axios')
+
+const bearerHeader = token => ({ authorization: `Bearer ${token}` })
 
 module.exports = [
   {
@@ -7,8 +10,8 @@ module.exports = [
     interval: '1m',
     handler: async ctx => {
       let token = ctx.tokens.get('Monzo')
-      let headers = { authorization: `Bearer ${token.access_token}` }
-      let params = { account_id: token.account_id }
+      let headers = bearerHeader(token.accessToken)
+      let params = { account_id: token.accountId }
 
       let res = await axios.get('https://api.monzo.com/balance', {
         params,
@@ -24,7 +27,7 @@ module.exports = [
     interval: '10m',
     handler: async ctx => {
       let token = ctx.tokens.get('Monzo')
-      let headers = { authorization: `Bearer ${token.access_token}` }
+      let headers = bearerHeader(token.accessToken)
 
       let res = await axios.get('https://api.monzo.com/pots', { headers })
 
@@ -40,9 +43,9 @@ module.exports = [
       since.setDate(since.getDate() - 5)
 
       let token = ctx.tokens.get('Monzo')
-      let headers = { authorization: `Bearer ${token.access_token}` }
+      let headers = bearerHeader(token.accessToken)
       let params = {
-        account_id: token.account_id,
+        account_id: token.accountId,
         limit: 50,
         since: since
       }
@@ -71,6 +74,53 @@ module.exports = [
           params,
           headers
         }
+      )
+
+      return res.data
+    }
+  },
+  {
+    name: 'github/activity',
+    requiredTokens: ['GitHub'],
+    interval: '5m',
+    handler: async ctx => {
+      let { username, accessToken } = ctx.tokens.get('GitHub')
+      let headers = bearerHeader(accessToken)
+
+      let res = await axios.get(
+        `https://api.github.com/users/${username}/events`,
+        { headers }
+      )
+
+      return res.data
+    }
+  },
+  {
+    name: 'quote/random',
+    requiredTokens: [],
+    interval: '5m',
+    handler: async ctx => {
+      let res = await axios.get(
+        'https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en'
+      )
+
+      return res.data
+    }
+  },
+  {
+    name: 'darksky/forecast',
+    requiredTokens: ['DarkSky'],
+    interval: '30m',
+    handler: async ctx => {
+      let { secretKey, lat, lng } = ctx.tokens.get('DarkSky')
+
+      let params = querystring.stringify({
+        exclude: 'minutely,daily',
+        units: 'si'
+      })
+
+      let res = await axios.get(
+        `https://api.darksky.net/forecast/${secretKey}/${lat},${lng}?${params}`
       )
 
       return res.data

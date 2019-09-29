@@ -1,4 +1,6 @@
 module.exports = {
-  Monzo: require('./monzo'),
-  Spotify: require('./spotify')
+  DarkSky: require('./darksky-token'),
+  Monzo: require('./monzo-token'),
+  Spotify: require('./spotify-token'),
+  GitHub: require('./github-token')
 }
