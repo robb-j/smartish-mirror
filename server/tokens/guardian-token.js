@@ -22,33 +22,33 @@ module.exports = {
         {
           type: 'password',
           name: 'secretKey',
-          message: 'Enter your darksky secret key',
+          message: 'Enter your Guardian developer secret key',
           initial: process.env.GUARDIAN_SECRET_KEY
         }
       ],
       promptsOpts
     )
 
-    const params = { 'api-key': secretKey }
-    const res = await axios.get('http://content.guardianapis.com/editions', {
-      params
-    })
+    const sectionsRes = await axios.get(
+      'https://content.guardianapis.com/sections',
+      { params: { 'api-key': secretKey } }
+    )
 
-    const editionToChoice = edition => {
+    const sectionToChoice = section => {
       return {
-        title: edition.edition,
-        value: edition.id
+        title: section.webTitle,
+        value: section.id
       }
     }
 
-    const { edition } = await prompts({
-      type: 'select',
-      name: 'edition',
+    const { sections } = await prompts({
+      type: 'autocompleteMultiselect',
+      name: 'sections',
       message: 'Pick an edition',
-      choices: res.data.response.results.map(editionToChoice)
+      choices: sectionsRes.data.response.results.map(sectionToChoice)
     })
 
-    return { secretKey, edition }
+    return { secretKey, sections }
   },
   hasExpired() {
     return false

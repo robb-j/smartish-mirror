@@ -131,10 +131,11 @@ module.exports = [
     requiredTokens: ['Guardian'],
     interval: '10m',
     handler: async ctx => {
-      let { secretKey } = ctx.tokens.get('Guardian')
+      let { secretKey, sections } = ctx.tokens.get('Guardian')
 
       let params = {
-        'api-key': secretKey
+        'api-key': secretKey,
+        section: sections.join('|')
       }
 
       let res = await axios.get(`https://content.guardianapis.com/search`, {
