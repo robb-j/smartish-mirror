@@ -25,15 +25,11 @@ function log(...messages) {
 
 const fetchJSON = url => fetch(url).then(r => r.json())
 
-// const div = (attrs = {}, children = []) => html('div', attrs, children)
-
 const endpointID = endpoint => endpoint.name.replace(/\//g, '-')
 
 const formatTime = (date = new Date()) => date.toLocaleTimeString('en-GB')
 
 const jsonify = data => JSON.stringify(data, null, 2)
-
-// const pipe = (...args) => arg0 => args.reduce((result, fn) => fn(result), arg0)
 
 function renderEndpoint(endpoint, data = null, status = 404) {
   return html('details', { id: endpointID(endpoint), className: 'endpoint' }, [

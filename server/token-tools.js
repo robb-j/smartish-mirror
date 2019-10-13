@@ -155,7 +155,7 @@ function makeOAuth2Token({
 
         return makeToken(
           data.access_token,
-          token.refreshToken,
+          data.refresh_token || token.refreshToken,
           data.token_type,
           data.scope,
           data.expires_in,

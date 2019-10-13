@@ -1,0 +1,7 @@
+{
+  "presets": ["@babel/preset-env", "minify"],
+  "plugins": [
+    ["@babel/plugin-transform-react-jsx", { "pragma": "createElement" }]
+  ],
+  "comments": false
+}

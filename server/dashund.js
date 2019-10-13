@@ -7,5 +7,5 @@ const tokens = require('./tokens')
 const endpoints = require('./endpoints')
 
 module.exports = new Dashund(widgets, tokens, endpoints, {
-  corsHosts: ['http://localhost:8080']
+  corsHosts: ['http://localhost:1234']
 })

@@ -6,10 +6,13 @@
   "repository": "robb-j/smartish-mirror",
   "author": "",
   "license": "MIT",
+  "main": "src/index.js",
   "scripts": {
     "coverage": "jest --coverage",
-    "dev": "NODE_ENV=development nodemon -w src -x 'node -r dotenv/config' src/index.js",
+    "dev:app": "parcel app/index.html -d dist/app",
+    "dev:debug": "parcel debug/index.html  -d dist/debug",
     "serve:app": "http-server app",
+    "serve:debug": "http-server debug",
     "serve:server": "node server/server.js",
     "lint": "eslint src",
     "prettier": "prettier --write '**/*.{js,json,css,md,ts,tsx}'",
@@ -31,10 +34,16 @@
     "prompts": "^2.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.6.3",
+    "@babel/core": "^7.6.3",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.6.3",
     "akita-ws": "^0.1.1",
+    "babel-preset-minify": "^0.5.1",
     "eslint": "^5.14.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-html": "^6.0.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
@@ -44,7 +53,9 @@
     "jest": "^24.7.1",
     "lint-staged": "^8.1.4",
     "nodemon": "^1.19.1",
-    "prettier": "^1.16.4"
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^1.16.4",
+    "typescript": "^3.6.4"
   },
   "prettier": {
     "semi": false,
@@ -60,6 +71,5 @@
       "prettier --write",
       "git add"
     ]
-  },
-  "main": "src/index.js"
+  }
 }

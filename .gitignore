@@ -7,3 +7,5 @@ coverage
 *.env
 .DS_Store
 .dashund
+.cache
+dist
