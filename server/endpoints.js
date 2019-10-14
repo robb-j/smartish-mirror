@@ -5,7 +5,7 @@ const bearerHeader = token => ({ authorization: `Bearer ${token}` })
 const wrapAxiosError = block => {
   return async (...args) => {
     try {
-      await block(...args)
+      return await block(...args)
     } catch (error) {
       if (error.isAxiosError && error.response) {
         const { status, statusText, data } = error.response
