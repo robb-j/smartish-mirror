@@ -1,7 +1,6 @@
 :root {
   --mirror-frame: 1.5rem;
-  --widget-spacing: 0.75rem;
-  --widget-left-inner: 1.5rem;
+  --widget-spacing: 1.5rem;
 }
 
 html {
@@ -49,16 +48,36 @@ html {
 /*
  * Widget
  */
-.widget {
+.widget-chrome {
+  border-left: 3px solid white;
+  padding-left: 1.5rem;
+  line-height: 1;
+}
+.widget-chrome > :not(:last-child):not(.widget-label) {
+  margin-bottom: 0.8rem;
+}
+.widget-chrome .widget-title {
+  margin-left: -0.75rem;
 }
 .widget-title {
-  font-size: 1.5em;
+  font-size: 1.8em;
   font-weight: 600;
 }
 .widget-text {
-  margin-left: var(--widget-left-inner);
 }
-.widget-chrome {
-  border-left: 3px solid white;
-  padding-left: 0.75rem;
+.widget-label {
+  font-style: italic;
+  font-weight: 600;
+}
+.widget-heading {
+  line-height: 1;
+  font-size: 1.5em;
+}
+.widget-listItem {
+  margin-left: 0.66rem;
+  margin-bottom: 0.2em;
+  font-size: 0.9em;
+}
+.widget-subHeading {
+  font-size: 1.1em;
 }

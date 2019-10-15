@@ -10,7 +10,7 @@
   "scripts": {
     "coverage": "jest --coverage",
     "dev:app": "parcel app/index.html -d dist/app",
-    "dev:debug": "parcel debug/index.html  -d dist/debug",
+    "dev:debug": "parcel debug/index.html -d dist/debug -p 1235",
     "serve:app": "http-server app",
     "serve:debug": "http-server debug",
     "serve:server": "node server/server.js",

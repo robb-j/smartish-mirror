@@ -66,7 +66,8 @@ module.exports = [
       let params = {
         account_id: token.accountId,
         limit: 50,
-        since: since
+        since: since,
+        expand: ['merchant']
       }
 
       let res = await axios.get('https://api.monzo.com/transactions', {

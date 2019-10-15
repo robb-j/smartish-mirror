@@ -140,6 +140,8 @@ function makeOAuth2Token({
       try {
         debug(`#refreshToken started`)
 
+        // TODO: doesn't persist non-oauth values ...
+
         let body = querystring.stringify({
           grant_type: 'refresh_token',
           refresh_token: token.refreshToken,
@@ -153,7 +155,7 @@ function makeOAuth2Token({
 
         debug(`#refreshToken body=${JSON.stringify(data)}`)
 
-        return makeToken(
+        let newToken = makeToken(
           data.access_token,
           data.refresh_token || token.refreshToken,
           data.token_type,
@@ -162,6 +164,8 @@ function makeOAuth2Token({
           token.clientId,
           token.clientSecret
         )
+
+        return { ...token, ...newToken }
       } catch (error) {
         debug(`#refreshToken failed, ${error.message}`)
         throw error
