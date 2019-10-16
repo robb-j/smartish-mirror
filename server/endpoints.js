@@ -100,6 +100,21 @@ module.exports = [
     })
   },
   {
+    name: 'github/profile',
+    requiredTokens: ['GitHub'],
+    interval: '1h',
+    handler: wrapAxiosError(async ctx => {
+      let { username, accessToken } = ctx.tokens.get('GitHub')
+      let headers = bearerHeader(accessToken)
+
+      let res = await axios.get(`https://api.github.com/users/${username}`, {
+        headers
+      })
+
+      return res.data
+    })
+  },
+  {
     name: 'github/activity',
     requiredTokens: ['GitHub'],
     interval: '5m',

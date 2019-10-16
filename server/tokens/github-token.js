@@ -13,7 +13,7 @@ module.exports = makeOAuth2Token({
   clientDashboard: 'https://github.com/settings/developers',
   authorizeEndpoint: 'https://github.com/login/oauth/authorize',
   tokenEndpoint: 'https://github.com/login/oauth/access_token',
-  scope: 'repo:status',
+  scope: 'repo user',
   initialClientId: process.env.GITHUB_CLIENT_ID,
   initialClientSecret: process.env.GITHUB_CLIENT_SECRET,
   configureToken: async token => {

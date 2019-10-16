@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import { createElement } from './render'
+import { createElement, DomFragment, setupFontawesome } from './utils'
 import * as widgetRenderers from './widgets'
 
 const { fetch, WebSocket } = window
@@ -67,6 +67,11 @@ function redrawWidgets(widgets, endpointData) {
 // App entry point
 //
 ;(async () => {
+  window.createElement = createElement
+  window.DomFragment = DomFragment
+
+  setupFontawesome()
+
   const zones = await getZones()
   const { widgetTypes } = await fetchJSON(`${API_URL}/widget-types`)
 

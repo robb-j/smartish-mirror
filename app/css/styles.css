@@ -1,12 +1,19 @@
 :root {
   --mirror-frame: 1.5rem;
   --widget-spacing: 1.5rem;
+  --monospace-family: 'Fira Code', monospace;
+  --off-white: #ccc;
 }
 
 html {
   background-color: black;
   color: white;
   font-family: 'Poppins', sans-serif;
+}
+
+pre,
+code {
+  font-family: var(--monospace-family);
 }
 
 /*
@@ -80,4 +87,29 @@ html {
 }
 .widget-subHeading {
   font-size: 1.1em;
+}
+
+/**
+ * Miscellaneous
+ */
+.github-repository {
+  font-family: var(--monospace-family);
+  font-weight: 700;
+}
+.quote-chrome .widget-title {
+  text-align: justify;
+  font-size: 1.4em;
+  line-height: 1.2;
+  font-weight: 400;
+}
+.quote-chrome .widget-text {
+  font-size: 1.2em;
+  text-align: right;
+  color: var(--off-white);
+}
+.fa-icon:not(first-child) {
+  margin-left: 0.3em;
+}
+.fa-icon:not(last-child) {
+  margin-right: 0.3em;
 }
