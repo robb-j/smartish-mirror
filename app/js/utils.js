@@ -1,14 +1,14 @@
 import { library, icon as faIcon } from '@fortawesome/fontawesome-svg-core'
 import {
   faHatWizard,
-  faStop,
+  faPauseCircle,
   faPause,
   faMusic
 } from '@fortawesome/free-solid-svg-icons'
 
 /** Initially setup fontawesome by adding the icons we need */
 export function setupFontawesome() {
-  library.add(faHatWizard, faStop, faPause, faMusic)
+  library.add(faHatWizard, faPauseCircle, faPause, faMusic)
 }
 
 /** A utility to ensure an EndpointData has success=200 or return an error */
@@ -47,4 +47,9 @@ export function FaIcon(attrs, children) {
   let icon = faIcon(attrs)
   if (!icon) throw new Error(`Unknown fa-icon ${JSON.stringify(attrs)}`)
   return <span className="fa-icon">{Array.from(icon.node)}</span>
+}
+
+/** Remove all children from a DOM element */
+export function removeAllChildren(elem) {
+  while (elem.firstChild) elem.firstChild.remove()
 }

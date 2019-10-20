@@ -24,17 +24,18 @@ export const GitHub = (widget, data) => {
   const [activity, error] = ensureData(data, 'github/activity')
   if (error) return error
 
-  const events = activity
+  const eventMessages = activity
     .filter(e => Object.keys(eventTypes).includes(e.type))
-    .slice(0, 5)
+    .map(e => eventTypes[e.type](e))
+    .slice(0, 3)
 
   let activitySection = []
-  if (events.length > 0) {
+  if (eventMessages.length > 0) {
     activitySection = [
       <p className="widget-label">Recent</p>,
       <ul className="widget-list">
-        {events.map(event => (
-          <li className="widget-listItem">{eventTypes[event.type](event)}</li>
+        {eventMessages.map(msg => (
+          <li className="widget-listItem">{msg}</li>
         ))}
       </ul>
     ]

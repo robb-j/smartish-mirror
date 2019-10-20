@@ -1,5 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import { createElement, DomFragment, setupFontawesome } from './utils'
+import {
+  createElement,
+  DomFragment,
+  setupFontawesome,
+  removeAllChildren
+} from './utils'
 import * as widgetRenderers from './widgets'
 
 const { fetch, WebSocket } = window
@@ -58,7 +63,7 @@ function pushOrSet(map, key, value) {
 
 function redrawWidgets(widgets, endpointData) {
   for (let { widget, elem } of widgets) {
-    while (elem.firstChild) elem.firstChild.remove()
+    removeAllChildren(elem)
     elem.append(...renderWidget(widget, endpointData).children)
   }
 }

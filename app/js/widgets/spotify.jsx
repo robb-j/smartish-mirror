@@ -9,7 +9,7 @@ function SpotifyTrack(attrs, children) {
   if (!hasTrack) {
     return (
       <p className="widget-subHeading">
-        <FaIcon prefix="fas" iconName="stop" /> Not playing
+        <FaIcon prefix="fas" iconName="pause-circle" /> Not playing
       </p>
     )
   }

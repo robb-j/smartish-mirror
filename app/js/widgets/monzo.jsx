@@ -49,9 +49,10 @@ export const Monzo = (widget, data) => {
   return (
     <div className="widget-chrome">
       <p className="widget-title">Monzo</p>
-      <p className="widget-heading">{currency(balance.balance)}</p>
-      <p className="widget-subHeading">
-        <strong>{currency(balance.spend_today)}</strong> spent today
+      <p className="widget-text">
+        balance: {currency(balance.balance)}
+        <br />
+        today: {currency(balance.spend_today)}
       </p>
       {potsSection}
       {recentSection}
