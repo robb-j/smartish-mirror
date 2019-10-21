@@ -151,7 +151,7 @@ module.exports = [
 
       let params = {
         exclude: 'minutely,daily',
-        units: 'si'
+        units: 'uk2'
       }
 
       let res = await axios.get(

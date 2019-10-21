@@ -2,12 +2,34 @@ import { library, icon as faIcon } from '@fortawesome/fontawesome-svg-core'
 import {
   faHatWizard,
   faPauseCircle,
-  faMusic
+  faMusic,
+  faMoon,
+  faUmbrella,
+  faCloudRain,
+  faWind,
+  faSmog,
+  faCloud,
+  faCloudSun,
+  faCloudMoon
 } from '@fortawesome/free-solid-svg-icons'
+import { faSun, faSnowflake } from '@fortawesome/free-regular-svg-icons'
 
 /** Initially setup fontawesome by adding the icons we need */
 export function setupFontawesome() {
-  library.add(faHatWizard, faPauseCircle, faMusic)
+  library.add(
+    faHatWizard,
+    faPauseCircle,
+    faMusic,
+    faMoon,
+    faUmbrella,
+    faCloudRain,
+    faWind,
+    faSmog,
+    faCloud,
+    faCloudSun,
+    faCloudMoon
+  )
+  library.add(faSun, faSnowflake)
 }
 
 /** A utility to ensure an EndpointData has success=200 or return an error */
