@@ -1,5 +1,3 @@
-import { removeAllChildren } from '../utils'
-
 const TICK_INTERVAL = 200
 
 const CurrentTime = (attrs, children) => {
@@ -25,15 +23,12 @@ const CurrentDate = (attrs, children) => {
     dateStyle: 'full'
   })
 
-  console.log(formatter.format(now))
-
   return <p className="widget-text">{formatter.format(now)}</p>
 }
 
 export const Clock = (widget, data) => {
   let time = <CurrentTime />
-
-  const date = <CurrentDate />
+  let date = <CurrentDate />
 
   const elem = (
     <div className="widget-chrome">
@@ -43,22 +38,18 @@ export const Clock = (widget, data) => {
   )
 
   setInterval(() => {
-    let newTime = CurrentTime()
+    let newTime = <CurrentTime />
+    let newDate = <CurrentDate />
 
-    // console.log(
-    //   time.innerText,
-    //   newTime.innerText,
-    //   time.innerText === newTime.innerText
-    // )
+    if (time.innerText !== newTime.innerText) {
+      elem.replaceChild(newTime, time)
+      time = newTime
+    }
 
-    if (time.innerText === newTime.innerText) return
-
-    elem.replaceChild(newTime, time)
-    time = newTime
-
-    // removeAllChildren(time)
-    // time.replaceWith(newTime)
-    // time.append(newTime)
+    if (date.innerText !== newDate.innerText) {
+      elem.replaceChild(newDate, date)
+      date = newDate
+    }
   }, TICK_INTERVAL)
 
   return elem

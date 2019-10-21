@@ -2,13 +2,12 @@ import { library, icon as faIcon } from '@fortawesome/fontawesome-svg-core'
 import {
   faHatWizard,
   faPauseCircle,
-  faPause,
   faMusic
 } from '@fortawesome/free-solid-svg-icons'
 
 /** Initially setup fontawesome by adding the icons we need */
 export function setupFontawesome() {
-  library.add(faHatWizard, faPauseCircle, faPause, faMusic)
+  library.add(faHatWizard, faPauseCircle, faMusic)
 }
 
 /** A utility to ensure an EndpointData has success=200 or return an error */
@@ -31,8 +30,7 @@ export function createElement(tagName, attrs = {}, ...children) {
   if (typeof tagName === 'function') return tagName(attrs, children)
   const elem = Object.assign(document.createElement(tagName), attrs)
   for (const child of children) {
-    if (Array.isArray(child)) elem.append(...child)
-    else elem.append(child)
+    elem.append(...[child].flat(2))
   }
   return elem
 }

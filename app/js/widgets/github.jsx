@@ -6,17 +6,17 @@ const repo = event => (
 
 const eventTypes = {
   CreateEvent: event => (
-    <span>
+    <>
       created {event.payload.ref_type} {event.payload.ref}
       {' in '}
       {repo(event)}
-    </span>
+    </>
   ),
-  PushEvent: event => <span>pushed to {repo(event)}</span>,
+  PushEvent: event => <>pushed to {repo(event)}</>,
   RepositoryEvent: event => (
-    <span>
+    <>
       {event.payload.action} repo {repo(event)}{' '}
-    </span>
+    </>
   )
 }
 

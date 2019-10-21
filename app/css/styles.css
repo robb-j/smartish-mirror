@@ -1,8 +1,10 @@
 :root {
   --mirror-frame: 1.5rem;
-  --widget-spacing: 1.5rem;
+  --widget-spacing: 2rem;
+  --chrome-spacing: 0.8rem;
   --monospace-family: 'Fira Code', monospace;
   --off-white: #ccc;
+  --column-size: 360px;
 }
 
 html {
@@ -22,8 +24,8 @@ code {
 .zones {
   display: grid;
   height: 100vh;
-  grid-template-columns: 300px 1fr 300px;
-  grid-template-rows: 6fr 1fr;
+  grid-template-columns: var(--column-size) 1fr var(--column-size);
+  grid-template-rows: 1fr min-content;
 }
 .zones-left {
   grid-column: 1;
@@ -37,9 +39,8 @@ code {
 }
 .zones-bottom {
   grid-column: 1/-1;
-  padding: var(--mirror-frame) 0;
-  width: 66%;
-  margin: 0 auto;
+  padding: 0 16.6667% var(--mirror-frame);
+  align-self: end;
 }
 
 /*
@@ -48,9 +49,10 @@ code {
 .widgetList {
 }
 .widgetList-widget {
-}
-.widgetList-widget:not(:last-child) {
   margin-bottom: var(--widget-spacing);
+}
+.widgetList-widget:last-child {
+  margin-bottom: 0;
 }
 
 /*
@@ -61,8 +63,8 @@ code {
   padding-left: 1.5rem;
   line-height: 1;
 }
-.widget-chrome > :not(:last-child):not(.widget-label) {
-  margin-bottom: 0.8rem;
+.widget-chrome > :last-child {
+  margin-bottom: 0;
 }
 .widget-chrome .widget-title {
   margin-left: -0.75rem;
@@ -70,8 +72,10 @@ code {
 .widget-title {
   font-size: 1.8em;
   font-weight: 600;
+  margin-bottom: var(--chrome-spacing);
 }
 .widget-text {
+  margin-bottom: var(--chrome-spacing);
 }
 .widget-label {
   font-style: italic;
@@ -80,14 +84,22 @@ code {
 .widget-heading {
   line-height: 1;
   font-size: 1.5em;
+  margin-bottom: var(--chrome-spacing);
+}
+.widget-list {
+  margin-bottom: var(--chrome-spacing);
+}
+.widget-list--padded {
+  margin-top: 0.375rem;
+  margin-left: 0.375em;
+}
+.widget-list--padded > .widget-listItem {
+  margin-bottom: 0.75em;
 }
 .widget-listItem {
   margin-left: 0.66rem;
-  margin-bottom: 0.2em;
+  margin-bottom: 0.4em;
   font-size: 0.9em;
-}
-.widget-subHeading {
-  font-size: 1.1em;
 }
 
 /**
@@ -97,6 +109,23 @@ code {
   font-family: var(--monospace-family);
   font-weight: 700;
 }
+.fa-icon:not(first-child) {
+  margin-left: 0.3em;
+}
+.fa-icon:not(last-child) {
+  margin-right: 0.3em;
+}
+
+/*
+ * Clock widget
+ */
+.Clock .widget-title {
+  font-size: 3rem;
+}
+
+/* 
+ * Quote widget
+ */
 .quote-chrome .widget-title {
   text-align: justify;
   font-size: 1.4em;
@@ -107,14 +136,4 @@ code {
   font-size: 1.2em;
   text-align: right;
   color: var(--off-white);
-}
-.fa-icon:not(first-child) {
-  margin-left: 0.3em;
-}
-.fa-icon:not(last-child) {
-  margin-right: 0.3em;
-}
-
-.Clock .widget-title {
-  font-size: 3rem;
 }

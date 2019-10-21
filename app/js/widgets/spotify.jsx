@@ -8,7 +8,7 @@ function SpotifyTrack(attrs, children) {
 
   if (!hasTrack) {
     return (
-      <p className="widget-subHeading">
+      <p className="widget-text">
         <FaIcon prefix="fas" iconName="pause-circle" /> Not playing
       </p>
     )
@@ -16,15 +16,17 @@ function SpotifyTrack(attrs, children) {
 
   const trimmedTitle = current.item.name.replace(/\(.+\)/, '')
 
+  const artists = current.item.artists.map(a => a.name).join(' & ')
+
   return (
     <>
-      <p className="widget-subHeading">
-        <FaIcon prefix="fas" iconName={isPlaying ? 'music' : 'pause'} />
+      <p className="widget-heading">
+        <FaIcon prefix="fas" iconName={isPlaying ? 'music' : 'pause-circle'} />
         {trimmedTitle}
       </p>
       <ul className="widget-list">
         <li className="widget-listItem">– {current.item.album.name}</li>
-        <li className="widget-listItem">– {current.item.artists[0].name}</li>
+        <li className="widget-listItem">– {artists}</li>
       </ul>
     </>
   )
