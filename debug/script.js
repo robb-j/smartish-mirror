@@ -35,6 +35,7 @@ function renderEndpoint(endpoint, data = null, status = 404) {
   return html('details', { id: endpointID(endpoint), className: 'endpoint' }, [
     html('summary', { className: 'endpoint-info' }, [
       html('span', { className: `status-code is-${status}` }, status),
+      ' ',
       html('strong', {}, endpoint.name),
       ` – every ${endpoint.interval} – updated at ${formatTime()}`
     ]),
