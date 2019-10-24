@@ -57,7 +57,6 @@ git add package*.json
 git commit -m "$PKG-$NEW_VERSION"
 git tag "$PKG-$NEW_VERSION"
 
-# Build and push the docker image
-IMAGE_NAME=docker.pkg.github.com/robb-j/smartish-mirror/$PKG:$NEW_VERSION
-docker build -t $IMAGE_NAME .
-docker push $IMAGE_NAME
+# Build and push the docker image w/ multi-arch support
+IMAGE_NAME=robbj/smartish-mirror:$PKG-$NEW_VERSION
+docker buildx build -t $IMAGE --push --platform linux/amd64,linux/arm64,linux/arm/v7 .
