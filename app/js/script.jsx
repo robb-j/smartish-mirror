@@ -8,7 +8,8 @@ import {
 import * as widgetRenderers from './widgets'
 
 const { fetch, WebSocket } = window
-const API_URL = 'http://localhost:3000'
+const API_URL =
+  (window.CONFIG && window.CONFIG.API_URL) || 'http://localhost:3000'
 
 const fetchJSON = url => fetch(url).then(r => r.json())
 
