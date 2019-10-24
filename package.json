@@ -8,42 +8,16 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "coverage": "jest --coverage",
-    "dev:app": "parcel app/index.html -d dist/app",
-    "dev:debug": "parcel debug/index.html -d dist/debug -p 1235",
-    "serve:app": "http-server app",
-    "serve:debug": "http-server debug",
-    "serve:server": "node server/server.js",
+    "debug": "http-server debug -p 1235",
     "lint": "eslint src",
     "prettier": "prettier --write '**/*.{js,json,css,md,ts,tsx}'",
-    "preversion": "npm run test -s",
-    "start": "node -r dotenv/config src/index.js",
     "test": "jest"
   },
   "keywords": [],
   "engines": {
     "node": ">=8"
   },
-  "dependencies": {
-    "axios": "^0.19.0",
-    "crypto-random-string": "^3.0.1",
-    "dashund": "^0.3.0",
-    "debug": "^4.1.1",
-    "dotenv": "^8.0.0",
-    "kleur": "^3.0.3",
-    "prompts": "^2.1.0"
-  },
   "devDependencies": {
-    "@babel/cli": "^7.6.3",
-    "@babel/core": "^7.6.3",
-    "@babel/plugin-transform-react-jsx": "^7.3.0",
-    "@babel/preset-env": "^7.6.3",
-    "@fortawesome/fontawesome-svg-core": "^1.2.25",
-    "@fortawesome/free-brands-svg-icons": "^5.11.2",
-    "@fortawesome/free-regular-svg-icons": "^5.11.2",
-    "@fortawesome/free-solid-svg-icons": "^5.11.2",
-    "akita-ws": "^0.1.1",
-    "babel-preset-minify": "^0.5.1",
     "eslint": "^5.14.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-config-standard": "^12.0.0",
@@ -52,14 +26,9 @@
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-standard": "^4.0.0",
-    "http-server": "^0.11.1",
     "husky": "^1.3.1",
-    "jest": "^24.7.1",
     "lint-staged": "^8.1.4",
-    "nodemon": "^1.19.1",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^1.16.4",
-    "typescript": "^3.6.4"
+    "prettier": "^1.16.4"
   },
   "prettier": {
     "semi": false,

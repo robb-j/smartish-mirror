@@ -1,0 +1,22 @@
+{
+  "name": "smartish-mirror-web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html --experimental-scope-hoisting"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.6.3",
+    "@babel/core": "^7.6.3",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.6.3",
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-brands-svg-icons": "^5.11.2",
+    "@fortawesome/free-regular-svg-icons": "^5.11.2",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "babel-preset-minify": "^0.5.1",
+    "http-server": "^0.11.1",
+    "parcel-bundler": "^1.12.4"
+  }
+}
