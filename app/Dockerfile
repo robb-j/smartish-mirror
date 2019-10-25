@@ -2,7 +2,7 @@
 # Must run `npm run build` before building
 # This is automatically ran as part of the `npm version`
 #
-FROM robbj/configurable-nginx:0.1.0
+FROM robbj/configurable-nginx:1.0.1
 COPY dist /usr/share/nginx/html
 
 # Start with a node 10 image with package info
