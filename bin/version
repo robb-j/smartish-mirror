@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+USAGE=`cat <<EOF
+Version a sub-package in the project and publish it as a docker image
+
+Usage: version <pkg> <version>
+
+Arguments
+  pkg - the folder of the package to be version
+  version - the "npm version" command to send, e.g. major|minor|patch
+EOF
+`
+
+# Get variables from cli args
+PKG=$1
+VERSION=$2
+
+# Check they passed a PKG
+if [ -z "$PKG" ]
+then
+  echo "ERROR: <pkg> is required"
+  echo "$USAGE"
+  exit 1
+fi
+
+if [ -z "$VERSION" ]
+then
+  echo "ERROR: <version> is required"
+  echo "$USAGE"
+  exit 1
+fi
+
+if [ ! -f $PKG/package.json ]
+then
+  echo "ERROR: Invalid package"
+  echo "$USAGE"
+  exit 1
+fi
+
+which jq &> /dev/null
+if [ $? -ne 0 ]
+then
+  echo "dependency jq not found"
+  exit 1
+fi
+
+set -e
+
+cd $PKG
+
+# Perform the versioning
+npm version $VERSION
+NEW_VERSION=`cat package.json | jq .version -r`
+
+# Commit and tag the release
+git add package*.json
+git commit -m "$PKG-$NEW_VERSION"
+git tag "$PKG-$NEW_VERSION"
+
+# Build and push the docker image w/ multi-arch support
+IMAGE_NAME=robbj/smartish-mirror:$PKG-$NEW_VERSION
+docker buildx build -t $IMAGE_NAME --push --platform linux/amd64,linux/arm64,linux/arm/v7 .

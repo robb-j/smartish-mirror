@@ -1,0 +1,9 @@
+url: ws://localhost:3000
+
+messages:
+  subBalance:
+    type: sub
+    target: monzo/balance
+  unsubBalance:
+    type: unsub
+    target: monzo/balance
