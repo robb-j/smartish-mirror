@@ -75,7 +75,7 @@ module.exports = [
         headers
       })
 
-      return res.data
+      return res.data.reverse()
     })
   },
   {
@@ -135,8 +135,12 @@ module.exports = [
     requiredTokens: [],
     interval: '5m',
     handler: wrapAxiosError(async ctx => {
+      // Because the API doesn't escape quotes in JSON correctly
+      const transformResponse = res => JSON.parse(res.replace(/\\'/g, "'"))
+
       let res = await axios.get(
-        'https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en'
+        'https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en',
+        { transformResponse }
       )
 
       return res.data

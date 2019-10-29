@@ -16,14 +16,41 @@ const CurrentTime = (attrs, children) => {
   )
 }
 
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+const months = [
+  'January',
+  'Febuary',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+]
+
 const CurrentDate = (attrs, children) => {
   const now = new Date()
 
-  const formatter = new Intl.DateTimeFormat('en-GB', {
-    dateStyle: 'full'
-  })
+  // const formatter = new Intl.DateTimeFormat('en-GB', {
+  //   dateStyle: 'full'
+  // })
 
-  return <p className="widget-text">{formatter.format(now)}</p>
+  const dayOfWeek = days[now.getDay()]
+  const dayOfMonth = now.getDate()
+  const month = months[now.getMonth()]
+  const year = now.getFullYear()
+
+  return (
+    <p className="widget-text">
+      {dayOfWeek},
+      <br />
+      {dayOfMonth} {month} {year}
+    </p>
+  )
 }
 
 export const Clock = (widget, data) => {

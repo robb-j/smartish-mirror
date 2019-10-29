@@ -1,13 +1,14 @@
 :root {
-  --mirror-frame: 1.5rem;
+  --mirror-frame: 1.2rem;
   --widget-spacing: 2rem;
-  --chrome-spacing: 0.8rem;
+  --chrome-spacing: 0.5rem;
   --monospace-family: 'Fira Code', monospace;
   --off-white: #ccc;
-  --column-size: 360px;
+  --column-size: 330px;
 }
 
 html {
+  font-size: 18px;
   background-color: black;
   color: white;
   font-family: 'Poppins', sans-serif;
@@ -60,14 +61,14 @@ code {
  */
 .widget-chrome {
   border-left: 3px solid white;
-  padding-left: 1.5rem;
+  padding-left: 1.2rem;
   line-height: 1;
 }
 .widget-chrome > :last-child {
   margin-bottom: 0;
 }
 .widget-chrome .widget-title {
-  margin-left: -0.75rem;
+  margin-left: -0.6rem;
 }
 .widget-title {
   font-size: 1.8em;
@@ -122,6 +123,9 @@ code {
 .Clock .widget-title {
   font-size: 3rem;
 }
+.Clock .widget-text {
+  font-size: 1.3rem;
+}
 
 /* 
  * Quote widget
@@ -136,4 +140,15 @@ code {
   font-size: 1.2em;
   text-align: right;
   color: var(--off-white);
+}
+
+.mirror-error {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+
+  font-size: 2rem;
 }

@@ -1,4 +1,4 @@
-import { ensureData } from '../utils'
+import { ensureData, renderError } from '../utils'
 
 const repo = event => (
   <span className="github-repository">{event.repo.name}</span>
@@ -22,7 +22,7 @@ const eventTypes = {
 
 export const GitHub = (widget, data) => {
   const [activity, error] = ensureData(data, 'github/activity')
-  if (error) return error
+  if (error) return renderError('GitHub', error)
 
   const eventMessages = activity
     .filter(e => Object.keys(eventTypes).includes(e.type))

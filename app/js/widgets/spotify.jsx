@@ -1,4 +1,4 @@
-import { ensureData, FaIcon } from '../utils'
+import { ensureData, renderError, FaIcon } from '../utils'
 
 function SpotifyTrack(attrs, children) {
   const { current = {} } = attrs
@@ -34,7 +34,7 @@ function SpotifyTrack(attrs, children) {
 
 export const Spotify = (widget, data) => {
   const [current, error] = ensureData(data, 'spotify/current')
-  if (error) return error
+  if (error) return renderError('Spotify', error)
 
   return (
     <div className="widget-chrome">

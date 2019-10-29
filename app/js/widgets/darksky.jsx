@@ -1,4 +1,4 @@
-import { ensureData, FaIcon } from '../utils'
+import { ensureData, renderError, FaIcon } from '../utils'
 
 const iconMap = {
   'clear-day': ['far', 'sun'],
@@ -26,10 +26,11 @@ function WeatherIcon(attrs, children) {
 export const DarkSky = (widget, data) => {
   let [forcast, error] = ensureData(data, 'darksky/forecast')
 
-  if (error) return error
+  if (error) return renderError('DarkSky', error)
 
-  const toTemp = num => `${num}°C`
+  const toTemp = num => `${num.toFixed(1)}°C`
   const toMph = num => `${num.toFixed(0)}Mph`
+  const toPercent = num => (num * 100).toFixed(0) + '%'
 
   const high = Math.max(...forcast.hourly.data.map(f => f.apparentTemperature))
   const low = Math.min(...forcast.hourly.data.map(f => f.apparentTemperature))
@@ -48,10 +49,10 @@ export const DarkSky = (widget, data) => {
           Feels like {toTemp(forcast.currently.apparentTemperature)}
         </li>
         <li className="widget-listItem">
-          H: {toTemp(high)} – L: {toTemp(low)}
+          H: {toTemp(high)}, L: {toTemp(low)}
         </li>
         <li className="widget-listItem">
-          {forcast.currently.precipProbability}% chance of rain
+          {toPercent(forcast.currently.precipProbability)} chance of rain
         </li>
         <li className="widget-listItem">
           {toMph(forcast.currently.windSpeed)} wind at{' '}

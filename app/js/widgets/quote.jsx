@@ -1,8 +1,8 @@
-import { ensureData } from '../utils'
+import { ensureData, renderError } from '../utils'
 
 export const Quote = (widget, data) => {
   const [quote, error] = ensureData(data, 'quote/random')
-  if (error) return error
+  if (error) return renderError('Quote', error)
 
   return (
     <div className="quote-chrome">

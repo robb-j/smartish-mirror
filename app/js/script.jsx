@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import {
   createElement,
   DomFragment,
@@ -14,17 +13,22 @@ const API_URL =
 const fetchJSON = url => fetch(url).then(r => r.json())
 
 async function getZones() {
-  const { zones } = await fetchJSON(`${API_URL}/zones`)
+  try {
+    const { zones } = await fetchJSON(`${API_URL}/zones`)
 
-  let getZone = name => {
-    const zone = zones.find(z => z.name === name)
-    return zone ? zone.widgets : []
-  }
+    let getZone = name => {
+      const zone = zones.find(z => z.name === name)
+      return zone ? zone.widgets : []
+    }
 
-  return {
-    left: getZone('left'),
-    right: getZone('right'),
-    bottom: getZone('bottom')
+    return {
+      left: getZone('left'),
+      right: getZone('right'),
+      bottom: getZone('bottom')
+    }
+  } catch (error) {
+    console.error(error)
+    return null
   }
 }
 
@@ -69,18 +73,7 @@ function redrawWidgets(widgets, endpointData) {
   }
 }
 
-//
-// App entry point
-//
-;(async () => {
-  window.createElement = createElement
-  window.DomFragment = DomFragment
-
-  setupFontawesome()
-
-  const zones = await getZones()
-  const { widgetTypes } = await fetchJSON(`${API_URL}/widget-types`)
-
+async function start(zones, widgetTypes) {
   const socket = new WebSocket(API_URL.replace(/^http/, 'ws'))
 
   await new Promise((resolve, reject) => {
@@ -155,6 +148,10 @@ function redrawWidgets(widgets, endpointData) {
     }
   })
 
+  socket.addEventListener('error', error => {
+    console.error(error)
+  })
+
   for (let endpoint of endpointNames) {
     const payload = JSON.stringify({
       type: 'sub',
@@ -169,4 +166,27 @@ function redrawWidgets(widgets, endpointData) {
   // periodically fetch the zones again
 
   document.querySelector('main').replaceWith(app)
+}
+
+//
+// App entry point
+//
+;(async () => {
+  window.createElement = createElement
+  window.DomFragment = DomFragment
+
+  setupFontawesome()
+
+  const zones = await getZones()
+  const { widgetTypes } = await fetchJSON(`${API_URL}/widget-types`)
+
+  if (!zones || !widgetTypes) {
+    document.querySelector('main').replaceWith(
+      <div className="mirror-error">
+        <p>Cannot connect to {API_URL}</p>
+      </div>
+    )
+  } else {
+    await start(zones, widgetTypes)
+  }
 })()
