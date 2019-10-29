@@ -48,6 +48,8 @@ export const Monzo = (widget, data) => {
     return renderError('Monzo', error1 || error2 || error3)
   }
 
+  let transations = [...recent.transactions].reverse()
+
   return (
     <div className="widget-chrome">
       <p className="widget-title">Monzo</p>
@@ -57,7 +59,7 @@ export const Monzo = (widget, data) => {
         today: {currencify(balance.spend_today)}
       </p>
       <PotsSection pots={savings.pots} />
-      <TransactionsSection transactions={recent.transactions} />
+      <TransactionsSection transactions={transations} />
     </div>
   )
 }

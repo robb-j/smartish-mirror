@@ -75,7 +75,7 @@ module.exports = [
         headers
       })
 
-      return res.data.reverse()
+      return res.data
     })
   },
   {
