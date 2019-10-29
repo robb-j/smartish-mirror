@@ -1,4 +1,4 @@
-import { ensureData } from '../utils'
+import { ensureData, renderError } from '../utils'
 
 function LatestStories(attrs, children) {
   let { stories = [] } = attrs
@@ -11,8 +11,6 @@ function LatestStories(attrs, children) {
     .slice(0, 5)
     .map(story => <li className="widget-listItem">{story.webTitle}</li>)
 
-  console.log(trimmedStories)
-
   return (
     <>
       <p className="widget-label">Recent stories</p>
@@ -23,8 +21,7 @@ function LatestStories(attrs, children) {
 
 export function Guardian(widget, data) {
   let [stories, error] = ensureData(data, 'guardian/latest')
-
-  if (error) return error
+  if (error) return renderError('Guardian', error)
 
   return (
     <div className="widget-chrome">

@@ -32,16 +32,25 @@ export function setupFontawesome() {
   library.add(faSun, faSnowflake)
 }
 
+export const renderError = (title, message) => (
+  <div className="widget-chrome">
+    <p className="widget-title">{title}</p>
+    <p className="widget-text">
+      <strong>Error</strong> {message}
+    </p>
+  </div>
+)
+
 /** A utility to ensure an EndpointData has success=200 or return an error */
 export function ensureData(data, key) {
   let result = data.get(key)
 
   if (!result) {
-    return [undefined, <p>Loading...</p>]
+    return [undefined, 'Loading...']
   }
 
   if (result.status !== 200) {
-    return [undefined, <p>Error: {result.status}</p>]
+    return [undefined, `http error: ${result.status}`]
   }
 
   return [result.data, undefined]

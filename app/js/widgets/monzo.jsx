@@ -1,4 +1,4 @@
-import { ensureData } from '../utils'
+import { ensureData, renderError } from '../utils'
 
 const currencify = (pence, dp = 2) => {
   return (pence < 0 ? '-£' : '£') + Math.abs(pence / 100).toFixed(dp)
@@ -44,7 +44,9 @@ export const Monzo = (widget, data) => {
   const [savings, error2] = ensureData(data, 'monzo/pots')
   const [recent, error3] = ensureData(data, 'monzo/recent')
 
-  if (error1 || error2 || error3) return error1 || error2 || error3
+  if (error1 || error2 || error3) {
+    return renderError('Monzo', error1 || error2 || error3)
+  }
 
   return (
     <div className="widget-chrome">
