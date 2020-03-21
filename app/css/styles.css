@@ -81,6 +81,7 @@ code {
 .widget-label {
   font-style: italic;
   font-weight: 600;
+  margin-bottom: calc(var(--chrome-spacing) / 2);
 }
 .widget-heading {
   line-height: 1;
