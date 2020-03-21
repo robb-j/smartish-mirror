@@ -7,11 +7,10 @@ const CurrentTime = (attrs, children) => {
 
   const hours = pad(now.getHours())
   const minutes = pad(now.getMinutes())
-  const seconds = pad(now.getSeconds())
 
   return (
     <p className="widget-title">
-      {hours}:{minutes}:{seconds}
+      {hours}:{minutes}
     </p>
   )
 }
@@ -76,12 +75,15 @@ export const Clock = (widget, data) => {
     let newTime = <CurrentTime />
     let newDate = <CurrentDate />
 
-    if (time.innerText !== newTime.innerText) {
+    const trim = str => str.replace(/\s+/g, '')
+    const trimmedDifferent = (a, b) => trim(a) !== trim(b)
+
+    if (trimmedDifferent(time.innerText, newTime.innerText)) {
       elem.replaceChild(newTime, time)
       time = newTime
     }
 
-    if (date.innerText !== newDate.innerText) {
+    if (trimmedDifferent(date.innerText, newDate.innerText)) {
       elem.replaceChild(newDate, date)
       date = newDate
     }
