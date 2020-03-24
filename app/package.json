@@ -8,7 +8,7 @@
     "preversion": "npm run build"
   },
   "devDependencies": {
-    "@babel/cli": "^7.6.3",
+    "@babel/cli": "^7.8.4",
     "@babel/core": "^7.6.3",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.6.3",
@@ -17,7 +17,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "babel-preset-minify": "^0.5.1",
-    "http-server": "^0.11.1",
+    "http-server": "^0.12.1",
     "parcel-bundler": "^1.12.4"
   }
 }
