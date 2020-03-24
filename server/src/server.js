@@ -4,3 +4,5 @@ const dashund = require('./dashund')
   await dashund.runServer(3000)
   console.log('Listening on :3000')
 })()
+
+process.on('SIGINT', () => process.exit(0))
