@@ -1,4 +1,5 @@
 export * from './clock'
+export * from './covid19'
 export * from './darksky'
 export * from './github'
 export * from './guardian'

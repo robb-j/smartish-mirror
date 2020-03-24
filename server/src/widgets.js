@@ -47,3 +47,9 @@ exports.Guardian = {
   requiredEndpoints: ['guardian/latest'],
   requiredTokens: ['Guardian']
 }
+
+exports.Covid19 = {
+  createFromCLI: emptyCreate,
+  requiredEndpoints: [],
+  requiredTokens: []
+}

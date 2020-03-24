@@ -19,5 +19,8 @@
     "babel-preset-minify": "^0.5.1",
     "http-server": "^0.12.1",
     "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "format-ms": "^1.2.1"
   }
 }
