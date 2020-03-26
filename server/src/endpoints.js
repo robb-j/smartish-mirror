@@ -1,4 +1,5 @@
 const axios = require('axios')
+const htmlparser2 = require('htmlparser2')
 
 const bearerHeader = token => ({ authorization: `Bearer ${token}` })
 
@@ -31,12 +32,10 @@ module.exports = [
       let token = ctx.tokens.get('Monzo')
       let headers = bearerHeader(token.accessToken)
       let params = { account_id: token.accountId }
-
       let res = await axios.get('https://api.monzo.com/balance', {
         params,
         headers
       })
-
       return res.data
     })
   },
@@ -47,9 +46,7 @@ module.exports = [
     handler: wrapAxiosError(async ctx => {
       let token = ctx.tokens.get('Monzo')
       let headers = bearerHeader(token.accessToken)
-
       let res = await axios.get('https://api.monzo.com/pots', { headers })
-
       return res.data
     })
   },
@@ -60,7 +57,6 @@ module.exports = [
     handler: wrapAxiosError(async ctx => {
       let since = new Date()
       since.setDate(since.getDate() - 5)
-
       let token = ctx.tokens.get('Monzo')
       let headers = bearerHeader(token.accessToken)
       let params = {
@@ -69,12 +65,10 @@ module.exports = [
         since: since,
         expand: ['merchant']
       }
-
       let res = await axios.get('https://api.monzo.com/transactions', {
         params,
         headers
       })
-
       return res.data
     })
   },
@@ -84,10 +78,8 @@ module.exports = [
     interval: '5s',
     handler: wrapAxiosError(async ctx => {
       let token = ctx.tokens.get('Spotify')
-
       let headers = { authorization: `Bearer ${token.accessToken}` }
       let params = {}
-
       let res = await axios.get(
         'https://api.spotify.com/v1/me/player/currently-playing',
         {
@@ -95,7 +87,6 @@ module.exports = [
           headers
         }
       )
-
       return res.data
     })
   },
@@ -106,11 +97,9 @@ module.exports = [
     handler: wrapAxiosError(async ctx => {
       let { username, accessToken } = ctx.tokens.get('GitHub')
       let headers = bearerHeader(accessToken)
-
       let res = await axios.get(`https://api.github.com/users/${username}`, {
         headers
       })
-
       return res.data
     })
   },
@@ -121,12 +110,10 @@ module.exports = [
     handler: wrapAxiosError(async ctx => {
       let { username, accessToken } = ctx.tokens.get('GitHub')
       let headers = bearerHeader(accessToken)
-
       let res = await axios.get(
         `https://api.github.com/users/${username}/events`,
         { headers }
       )
-
       return res.data
     })
   },
@@ -137,12 +124,10 @@ module.exports = [
     handler: wrapAxiosError(async ctx => {
       // Because the API doesn't escape quotes in JSON correctly
       const transformResponse = res => JSON.parse(res.replace(/\\'/g, "'"))
-
       let res = await axios.get(
         'https://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en',
         { transformResponse }
       )
-
       return res.data
     })
   },
@@ -152,17 +137,14 @@ module.exports = [
     interval: '30m',
     handler: wrapAxiosError(async ctx => {
       let { secretKey, lat, lng } = ctx.tokens.get('DarkSky')
-
       let params = {
         exclude: 'minutely,daily',
         units: 'uk2'
       }
-
       let res = await axios.get(
         `https://api.darksky.net/forecast/${secretKey}/${lat},${lng}`,
         { params }
       )
-
       return res.data
     })
   },
@@ -172,17 +154,31 @@ module.exports = [
     interval: '10m',
     handler: wrapAxiosError(async ctx => {
       let { secretKey, sections } = ctx.tokens.get('Guardian')
-
       let params = {
         'api-key': secretKey,
         section: sections.join('|')
       }
-
       let res = await axios.get(`https://content.guardianapis.com/search`, {
         params
       })
-
       return res.data.response.results
     })
   }
 ]
+
+if (process.env.UNTAPPD_FEED_URL) {
+  module.exports.push({
+    name: 'untappd/feed',
+    requiredTokens: [],
+    interval: '1h',
+    handler: wrapAxiosError(async ctx => {
+      const res = await axios.get(process.env.UNTAPPD_FEED_URL)
+
+      const feed = htmlparser2.parseFeed(res.data, {
+        xmlMode: true
+      })
+
+      return feed.items
+    })
+  })
+}

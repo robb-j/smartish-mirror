@@ -9,6 +9,7 @@
     "dashund": "^0.4.0",
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
+    "htmlparser2": "^4.1.0",
     "kleur": "^3.0.3",
     "prompts": "^2.3.2"
   },

@@ -50,6 +50,6 @@ exports.Guardian = {
 
 exports.Covid19 = {
   createFromCLI: emptyCreate,
-  requiredEndpoints: [],
+  requiredEndpoints: ['untappd/feed'],
   requiredTokens: []
 }
