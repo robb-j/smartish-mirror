@@ -1,19 +1,6 @@
+import { setInnerTextIfDifferent } from '../utils'
+
 const TICK_INTERVAL = 200
-
-const CurrentTime = (attrs, children) => {
-  const now = new Date()
-
-  const pad = number => number.toString().padStart(2, '0')
-
-  const hours = pad(now.getHours())
-  const minutes = pad(now.getMinutes())
-
-  return (
-    <p className="widget-title">
-      {hours}:{minutes}
-    </p>
-  )
-}
 
 const days = [
   'Sunday',
@@ -39,54 +26,51 @@ const months = [
   'December'
 ]
 
-const CurrentDate = (attrs, children) => {
-  const now = new Date()
+function formatTime(date) {
+  const pad = number => number.toString().padStart(2, '0')
 
-  // const formatter = new Intl.DateTimeFormat('en-GB', {
-  //   dateStyle: 'full'
-  // })
+  const hours = pad(date.getHours())
+  const minutes = pad(date.getMinutes())
 
-  const dayOfWeek = days[now.getDay()]
-  const dayOfMonth = now.getDate()
-  const month = months[now.getMonth()]
-  const year = now.getFullYear()
+  return `${hours}:${minutes}`
+}
 
-  return (
-    <p className="widget-text">
-      {dayOfWeek},
-      <br />
-      {dayOfMonth} {month} {year}
-    </p>
-  )
+function formatDay(date) {
+  return days[date.getDay()]
+}
+
+function formatDate(date) {
+  const dayOfMonth = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+
+  return `${dayOfMonth} ${month} ${year}`
 }
 
 export const Clock = (widget, data) => {
-  let time = <CurrentTime />
-  let date = <CurrentDate />
+  const startDate = new Date()
+
+  const time = <span>{formatTime(startDate)}</span>
+  const day = <span>{formatDay(startDate)}</span>
+  const date = <span>{formatDate(startDate)}</span>
 
   const elem = (
     <div className="widget-chrome">
-      {time}
-      {date}
+      <p className="widget-title">{time}</p>
+      <p className="widget-text">
+        {day}
+        <br />
+        {date}
+      </p>
     </div>
   )
 
   setInterval(() => {
-    let newTime = <CurrentTime />
-    let newDate = <CurrentDate />
+    const newDate = new Date()
 
-    const trim = str => str.replace(/\s+/g, '')
-    const trimmedDifferent = (a, b) => trim(a) !== trim(b)
-
-    if (trimmedDifferent(time.innerText, newTime.innerText)) {
-      elem.replaceChild(newTime, time)
-      time = newTime
-    }
-
-    if (trimmedDifferent(date.innerText, newDate.innerText)) {
-      elem.replaceChild(newDate, date)
-      date = newDate
-    }
+    setInnerTextIfDifferent(time, formatTime(newDate))
+    setInnerTextIfDifferent(day, formatDay(newDate))
+    setInnerTextIfDifferent(date, formatDate(newDate))
   }, TICK_INTERVAL)
 
   return elem

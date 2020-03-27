@@ -1,4 +1,5 @@
 import { formatMilliseconds } from 'format-ms'
+import { setInnerTextIfDifferent } from '../utils'
 
 const TICK_INTERVAL = 5000
 const LOCKDOWN_START = new Date('2020-03-24T00:00:00').getTime()
@@ -15,14 +16,6 @@ function countBeers(untappdFeed) {
   return untappdFeed.data.filter(
     item => new Date(item.pubDate).getTime() > LOCKDOWN_START
   ).length
-}
-
-function setInnerTextIfDifferent(elem, innerText) {
-  const trim = str => str.replace(/\s+/g, '')
-
-  if (trim(elem.innerText) === trim(innerText)) return
-
-  elem.innerText = innerText
 }
 
 export const Covid19 = (widget, data) => {

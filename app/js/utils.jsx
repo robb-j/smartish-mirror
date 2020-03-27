@@ -82,3 +82,11 @@ export function FaIcon(attrs, children) {
 export function removeAllChildren(elem) {
   while (elem.firstChild) elem.firstChild.remove()
 }
+
+export function setInnerTextIfDifferent(elem, innerText) {
+  const trim = str => str.replace(/\s+/g, '')
+
+  if (trim(elem.innerText) === trim(innerText)) return
+
+  elem.innerText = innerText
+}
