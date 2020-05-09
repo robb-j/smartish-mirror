@@ -57,13 +57,16 @@ source deploybot.env
 cd $PKG
 
 # Perform the versioning
-npm version $VERSION
+[ $VERSION != "rebuild" ] && npm version $VERSION
 NEW_VERSION=v`node -e "process.stdout.write(require('./package.json').version)"`
 
 # Commit and tag the release
-git add package*.json
-git commit -m "$PKG-$NEW_VERSION"
-git tag "$PKG-$NEW_VERSION"
+if [ $VERSION != "rebuild" ]
+then
+  git add package*.json
+  git commit -m "$PKG-$NEW_VERSION"
+  git tag "$PKG-$NEW_VERSION"
+fi
 
 # Work out the endpoint to deploy to
 ENDPOINT="$DEPLOYBOT_URL/build/smartish-mirror/$PKG-$NEW_VERSION-armv7?platforms=armv7"
