@@ -44,19 +44,34 @@ then
   exit 1
 fi
 
+if [ ! -f deploybot.env ]
+then
+  echo "deploybot.env not setup, see README.md"
+  exit 1
+fi
+
 set -e
+
+source deploybot.env
 
 cd $PKG
 
 # Perform the versioning
 npm version $VERSION
-NEW_VERSION=`cat package.json | jq .version -r`
+NEW_VERSION=v`node -e "process.stdout.write(require('./package.json').version)"`
 
 # Commit and tag the release
 git add package*.json
 git commit -m "$PKG-$NEW_VERSION"
 git tag "$PKG-$NEW_VERSION"
 
-# Build and push the docker image w/ multi-arch support
-IMAGE_NAME=robbj/smartish-mirror:$PKG-$NEW_VERSION
-docker buildx build -t $IMAGE_NAME --push --platform linux/amd64,linux/arm64,linux/arm/v7 .
+# Work out the endpoint to deploy to
+ENDPOINT="$DEPLOYBOT_URL/build/smartish-mirror/$PKG-$NEW_VERSION-armv7?platforms=armv7"
+
+# Tar the local directory and post it to deploybot
+tar -cz --exclude '*.env' --exclude 'node_modules' --exclude '.dashund' * \
+  | curl --data-binary @- \
+    -X POST \
+    --header "Authorization: Bearer $DEPLOYBOT_AUTH" \
+    --header "Content-Type: application/gzip" \
+     $ENDPOINT

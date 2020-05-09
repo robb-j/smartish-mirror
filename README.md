@@ -19,6 +19,21 @@ There's also a `FaIcon` component which renders the svg wrapped in a `<div class
 So you can do `<FaIcon prefix="fas" iconName="hat-wizard" />`.
 Any attributes are passed to [#icon](https://fontawesome.com/how-to-use/with-the-api/setup/getting-started)
 
+**build and deploy**
+
+```bash
+# Get a deploybot.env with a deploybot MASTER_KEY
+# You may need to change DEPLOYBOT_URL
+https deploybot.r0b.io/build/smartish-mirror "Authorization:Bearer $MASTER_KEY" \
+  | jq -r .build.dotenv > deploybot.dev
+
+# Version the server
+./bin/version server # patch | minor | major | x.y.x
+
+# Version the app
+./bin/version app # patch | minor | major | x.y.x
+```
+
 ---
 
 > This project was set up by [puggle](https://npm.im/puggle)
