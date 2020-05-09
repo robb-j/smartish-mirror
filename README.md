@@ -22,10 +22,18 @@ Any attributes are passed to [#icon](https://fontawesome.com/how-to-use/with-the
 **build and deploy**
 
 ```bash
+#
 # Get a deploybot.env with a deploybot MASTER_KEY
-# You may need to change DEPLOYBOT_URL
-https deploybot.r0b.io/build/smartish-mirror "Authorization:Bearer $MASTER_KEY" \
-  | jq -r .build.dotenv > deploybot.dev
+# -> You may need to change DEPLOYBOT_URL
+#
+
+# Once for the app
+https deploybot.r0b.io/build/smartish-mirror-app "Authorization:Bearer $MASTER_KEY" \
+  | jq -r .build.dotenv > app/deploybot.env
+
+# Once for the server
+https deploybot.r0b.io/build/smartish-mirror-server "Authorization:Bearer $MASTER_KEY" \
+  | jq -r .build.dotenv > server/deploybot.env
 
 # Version the server
 ./bin/version server # patch | minor | major | x.y.x
