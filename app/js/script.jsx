@@ -2,7 +2,8 @@ import {
   createElement,
   DomFragment,
   setupFontawesome,
-  removeAllChildren
+  removeAllChildren,
+  timeout
 } from './utils'
 import * as widgetRenderers from './widgets'
 
@@ -73,14 +74,7 @@ function redrawWidgets(widgets, endpointData) {
   }
 }
 
-async function start(zones, widgetTypes) {
-  const socket = new WebSocket(API_URL.replace(/^http/, 'ws'))
-
-  await new Promise((resolve, reject) => {
-    socket.addEventListener('open', resolve)
-    socket.addEventListener('error', reject)
-  })
-
+async function renderApp(socket, zones, widgetTypes) {
   const endpointNames = findEndpoints(zones, widgetTypes)
   const endpointData = new Map()
   const widgetMap = new Map()
@@ -107,7 +101,7 @@ async function start(zones, widgetTypes) {
   }
 
   const app = (
-    <main id="app" className="zones">
+    <div className="zones">
       <div className="zones-left">
         <div className="widgetList">{leftWidgets}</div>
       </div>
@@ -117,7 +111,7 @@ async function start(zones, widgetTypes) {
       <div className="zones-bottom">
         <div className="widgetList">{bottomWidgets}</div>
       </div>
-    </main>
+    </div>
   )
 
   await Promise.all(
@@ -148,10 +142,6 @@ async function start(zones, widgetTypes) {
     }
   })
 
-  socket.addEventListener('error', error => {
-    console.error(error)
-  })
-
   for (let endpoint of endpointNames) {
     const payload = JSON.stringify({
       type: 'sub',
@@ -162,10 +152,55 @@ async function start(zones, widgetTypes) {
 
   window.endpointData = endpointData
 
-  // fetch data for the widgets we have
-  // periodically fetch the zones again
+  return app
+}
 
-  document.querySelector('main').replaceWith(app)
+function renderError(message, subtitle = '') {
+  return (
+    <div className="mirror-error">
+      <p>{message}</p>
+      {subtitle && <p>{subtitle}</p>}
+    </div>
+  )
+}
+
+function resetRoot(node) {
+  const main = document.querySelector('main')
+
+  while (main.firstChild) main.firstChild.remove()
+
+  main.append(node)
+}
+
+async function main() {
+  const zones = await getZones()
+  const { widgetTypes } = await fetchJSON(`${API_URL}/widget-types`)
+
+  if (!zones || !widgetTypes) {
+    throw new Error(`Cannot connect to ${API_URL}`)
+  }
+
+  const socketUrl = API_URL.replace(/^http/, 'ws')
+
+  const socket = new WebSocket(socketUrl)
+
+  await new Promise((resolve, reject) => {
+    socket.addEventListener('open', resolve)
+    socket.addEventListener('error', reject)
+  })
+
+  resetRoot(await renderApp(socket, zones, widgetTypes))
+
+  return new Promise((resolve, reject) => {
+    socket.addEventListener('error', error => reject(error))
+    socket.addEventListener('close', event =>
+      reject(
+        new Error(
+          `WebSocket closed reason="${event.reason}" code="${event.code}"`
+        )
+      )
+    )
+  })
 }
 
 //
@@ -177,16 +212,17 @@ async function start(zones, widgetTypes) {
 
   setupFontawesome()
 
-  const zones = await getZones()
-  const { widgetTypes } = await fetchJSON(`${API_URL}/widget-types`)
+  while (true) {
+    let error = new Error('Something went wrong')
+    try {
+      await main()
+    } catch (newError) {
+      error = newError
+    }
 
-  if (!zones || !widgetTypes) {
-    document.querySelector('main').replaceWith(
-      <div className="mirror-error">
-        <p>Cannot connect to {API_URL}</p>
-      </div>
-    )
-  } else {
-    await start(zones, widgetTypes)
+    for (let i = 30; i > 0; i--) {
+      await timeout(1000)
+      resetRoot(renderError(`${error.message}`, `Restarting in ${i}`))
+    }
   }
 })()

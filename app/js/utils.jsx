@@ -90,3 +90,5 @@ export function setInnerTextIfDifferent(elem, innerText) {
 
   elem.innerText = innerText
 }
+
+export const timeout = t => new Promise(resolve => setTimeout(resolve, t))
