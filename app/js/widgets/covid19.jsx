@@ -34,7 +34,7 @@ export const Covid19 = (widget, data) => {
 
   setInterval(() => {
     setInnerTextIfDifferent(duration, calculateDuration())
-    setInnerTextIfDifferent(beers, countBeers(untappd))
+    setInnerTextIfDifferent(beers, '' + countBeers(untappd))
   }, TICK_INTERVAL)
 
   return elem
