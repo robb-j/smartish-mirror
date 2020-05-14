@@ -69,7 +69,7 @@ then
 fi
 
 # Work out the endpoint to deploy to
-ENDPOINT="$DEPLOYBOT_URL/build/smartish-mirror-$PKG/$NEW_VERSION+armv7?platforms=armv7"
+ENDPOINT="$DEPLOYBOT_URL/build/smartish-mirror-$PKG/$NEW_VERSION?platforms=armv7"
 
 # Tar the local directory and post it to deploybot
 tar -cz --exclude '*.env' --exclude 'node_modules' --exclude '.dashund' * \
